@@ -12,3 +12,5 @@ And we would like to seperate the project into serveral phases.
 ## personalized
 
 And our project need to have below time line.
+
+https://docs.google.com/spreadsheets/d/1iPYtnqKs7-l0CyRWRXVlH2K4CsEgC8ymjvzmKsWC8yQ/edit#gid=0
