@@ -1,2 +1,2 @@
-# cs6501_information_retrieval_course_project
+# cs6501012 information retrieval course project
 CS6501 information retrieval course project
