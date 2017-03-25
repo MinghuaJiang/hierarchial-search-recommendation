@@ -11,3 +11,4 @@ And we would like to seperate the project into serveral phases.
 
 ## personalized
 
+And our project need to have below time line.
