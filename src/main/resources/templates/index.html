@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FoamTree Quick Start</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <meta property="og:image" content="//get.carrotsearch.com/foamtree/latest/demos/assets/img/main-thumbnail.jpg"/>
+
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="css/index.css" type="text/css"/>
+</head>
+
+<body>
+<div id="search-area">
+    <form id="search-form" action="/stable/search"><h3 class="hide">Type your query:</h3>
+        <div id="required" class="clearfix"><input type="hidden" name="source" id="source" value="web"/><input
+                type="hidden" name="view" id="view" value="foamtree"/><input type="hidden" name="skin"
+                                                                             value="fancy-compact"/><span
+                id="query-glow" class="glow-small"><input type="text" name="query" id="query"/><span
+                class="t"><!----></span><span class="l"><!----></span><span class="r"><!----></span><span class="b"><!----></span><span
+                class="tl"><!----></span><span class="bl"><!----></span><span class="tr"><!----></span><span class="br"><!----></span></span><span
+                id="search-glow" class="glow-big"><button type="submit" id="search">Search</button><span class="t"><!----></span><span
+                class="l"><!----></span><span class="r"><!----></span><span class="b"><!----></span><span class="tl"><!----></span><span
+                class="bl"><!----></span><span class="tr"><!----></span><span class="br"><!----></span></span>
+
+            <div id="options"><label>
+                Download
+                <select name="results" id="results-number">
+                    <option value="50">50 results
+                    </option>
+                    <option value="100">100 results
+                    </option>
+                    <option value="150" selected="selected">150 results
+                    </option>
+                    <option value="200">200 results
+                    </option>
+                </select></label>
+                <label>
+                    Cluster with
+                    <select name="algorithm">
+                        <option value="lingo" selected="selected">Lingo</option>
+                        <option value="stc">STC</option>
+                        <option value="kmeans">K-means</option>
+                        <option value="url">By URL</option>
+                        <option value="source">By Source</option>
+                    </select></label>
+            </div>
+            </div>
+        </form>
+    </div>
+            <!-- The element to embed FoamTree into, must have non-zero dimensions. -->
+            <div id="container">
+                <div id="visualization"></div>
+            </div>
+            <div id="side">
+                <h2>Images inside group polygons</h2>
+
+                <p>
+                    You can use the <a href="../api/index.html#groupContentDecorator">groupContentDecorator</a> callback
+                    to draw arbitrary content in each group polygon. This example loads a set of
+                    <a href="https://github.com/adamfairhead/webicons" target="_blank">social icons in the SVG
+                        format</a> and
+                    renders them inside FoamTree.
+                </p>
+
+                <h4>What's in the code?</h4>
+
+                <ul>
+                    <li>
+                        using the <a href="../api/index.html#groupContentDecorator">groupContentDecorator</a> to draw
+                        custom contents inside group polygons
+                    </li>
+
+                    <li>
+                        asynchronous loading of SVG images, redrawing FoamTree once new images finished loading
+                    </li>
+
+                    <li>
+                        a workaround for the <a target="_blank"
+                                                href="https://bugzilla.mozilla.org/show_bug.cgi?id=1017847">Firefox
+                        bug related to SVG rendering</a>. Please also note that the quality of SVG rendering onto Canvas
+                        on Firefox
+                        seems much lower than on other browsers.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Include FoamTree implementation. -->
+            <script src="js/carrotsearch.foamtree.js"></script>
+            <script>
+      // Initialize FoamTree after the whole page loads to make sure
+      // the element has been laid out and has non-zero dimensions.
+      window.addEventListener("load", function() {
+        var foamtree = new CarrotSearchFoamTree({
+          // Identifier of the HTML element defined above
+          id: "visualization",
+
+          // Some data to visualize.
+          dataObject: {
+            groups: [
+              { label: "Your", weight: 1.0 },
+              { label: "First", weight: 3.0 },
+              { label: "FoamTree", weight: 2.0 },
+              { label: "Visualization", weight: 4.0 }
+            ]
+          }
+        });
+      });
+
+
+
+            </script>
+</body>
+</html>
