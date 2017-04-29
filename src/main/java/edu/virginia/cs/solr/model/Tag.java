@@ -14,13 +14,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @SolrDocument(solrCoreName = "hierachy-recommendation")
 public class Tag {
     @Id
-    @Indexed(name = "id", type = "string")
+    @Indexed(name = "id")
     private String id;
-    @Indexed(name = "tagName", type = "string")
+    @Indexed(name = "tagName_t")
     private String tagName;
-    @Indexed(name = "count", type = "string", searchable = false)
+    @Indexed(name = "count_i", searchable = false)
     private String count;
-    @Indexed(name = "wikiId", type = "string", searchable = false)
+    @Indexed(name = "wikiId_s", searchable = false)
     private String wikiId;
 
     @XmlAttribute(name="Id")

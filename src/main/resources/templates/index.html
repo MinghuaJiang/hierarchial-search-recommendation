@@ -1,113 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>FoamTree Quick Start</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-    <meta property="og:image" content="//get.carrotsearch.com/foamtree/latest/demos/assets/img/main-thumbnail.jpg"/>
+    <title>
+        Dashboard
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <meta charset="utf-8"/>
-    <link rel="stylesheet" href="css/index.css" type="text/css"/>
+    <!-- Bootstrap -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/index.css"/>
+
 </head>
-
 <body>
-<div id="search-area">
-    <form id="search-form" action="/stable/search"><h3 class="hide">Type your query:</h3>
-        <div id="required" class="clearfix"><input type="hidden" name="source" id="source" value="web"/><input
-                type="hidden" name="view" id="view" value="foamtree"/><input type="hidden" name="skin"
-                                                                             value="fancy-compact"/><span
-                id="query-glow" class="glow-small"><input type="text" name="query" id="query"/><span
-                class="t"><!----></span><span class="l"><!----></span><span class="r"><!----></span><span class="b"><!----></span><span
-                class="tl"><!----></span><span class="bl"><!----></span><span class="tr"><!----></span><span class="br"><!----></span></span><span
-                id="search-glow" class="glow-big"><button type="submit" id="search">Search</button><span class="t"><!----></span><span
-                class="l"><!----></span><span class="r"><!----></span><span class="b"><!----></span><span class="tl"><!----></span><span
-                class="bl"><!----></span><span class="tr"><!----></span><span class="br"><!----></span></span>
 
-            <div id="options"><label>
-                Download
-                <select name="results" id="results-number">
-                    <option value="50">50 results
-                    </option>
-                    <option value="100">100 results
-                    </option>
-                    <option value="150" selected="selected">150 results
-                    </option>
-                    <option value="200">200 results
-                    </option>
-                </select></label>
-                <label>
-                    Cluster with
-                    <select name="algorithm">
-                        <option value="lingo" selected="selected">Lingo</option>
-                        <option value="stc">STC</option>
-                        <option value="kmeans">K-means</option>
-                        <option value="url">By URL</option>
-                        <option value="source">By Source</option>
-                    </select></label>
-            </div>
-            </div>
-        </form>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">StackOverFlow Search</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/login">Sign In</a></li>
+            </ul>
+            <form id="search" class="navbar-form navbar-left">
+                <input id="real-search" type="text" class="form-control"/>
+                <button class="btn btn-info btn-md" type="button">
+                    <i class="glyphicon glyphicon-search"></i>
+                </button>
+            </form>
+        </div>
     </div>
-            <!-- The element to embed FoamTree into, must have non-zero dimensions. -->
-            <div id="container">
-                <div id="visualization"></div>
+</nav>
+
+<div id="search-query" class="container">
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div id="custom-search-input">
+                <div class="input-group col-md-12">
+                    <input id="custom-search" type="text" class="form-control input-lg" placeholder="Search" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-info btn-lg" type="submit">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </span>
+                </div>
             </div>
-            <div id="side">
-                <h2>Images inside group polygons</h2>
+        </div>
+    </div>
+</div>
 
-                <p>
-                    You can use the <a href="../api/index.html#groupContentDecorator">groupContentDecorator</a> callback
-                    to draw arbitrary content in each group polygon. This example loads a set of
-                    <a href="https://github.com/adamfairhead/webicons" target="_blank">social icons in the SVG
-                        format</a> and
-                    renders them inside FoamTree.
-                </p>
+<div id="search-result-container" class="container" style="margin-left:50%">
 
-                <h4>What's in the code?</h4>
+    <hgroup class="mb20">
+        <h1>Search Results</h1>
+        <h2 class="lead"><strong id="result-count" class="text-danger">3</strong> results were found for <strong id="query" class="text-danger"></strong></h2>
+    </hgroup>
 
-                <ul>
-                    <li>
-                        using the <a href="../api/index.html#groupContentDecorator">groupContentDecorator</a> to draw
-                        custom contents inside group polygons
-                    </li>
-
-                    <li>
-                        asynchronous loading of SVG images, redrawing FoamTree once new images finished loading
-                    </li>
-
-                    <li>
-                        a workaround for the <a target="_blank"
-                                                href="https://bugzilla.mozilla.org/show_bug.cgi?id=1017847">Firefox
-                        bug related to SVG rendering</a>. Please also note that the quality of SVG rendering onto Canvas
-                        on Firefox
-                        seems much lower than on other browsers.
-                    </li>
-                </ul>
+    <section class="col-md-12">
+        <article class="search-result row">
+            <div class="col-md-7 excerpt">
+                <h3><a href="#" title="">Does Spring MVC provide any Java API for constructing web links?</a></h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
+                <div class="tags">
+                    <a href="/questions/tagged/c%23" class="post-tag" title="show questions tagged &#39;c#&#39;" rel="tag">c#</a> <a href="/questions/tagged/overloading" class="post-tag" title="show questions tagged &#39;overloading&#39;" rel="tag">overloading</a>
+                </div>
             </div>
+            <span class="clearfix borda"></span>
+        </article>
 
-            <!-- Include FoamTree implementation. -->
-            <script src="js/carrotsearch.foamtree.js"></script>
-            <script>
-      // Initialize FoamTree after the whole page loads to make sure
-      // the element has been laid out and has non-zero dimensions.
-      window.addEventListener("load", function() {
-        var foamtree = new CarrotSearchFoamTree({
-          // Identifier of the HTML element defined above
-          id: "visualization",
+        <article class="search-result row">
+            <div class="col-md-7 excerpt">
+                <h3><a href="#" title="">Voluptatem, exercitationem, suscipit, distinctio</a></h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
+            </div>
+            <span class="clearfix borda"></span>
+        </article>
 
-          // Some data to visualize.
-          dataObject: {
-            groups: [
-              { label: "Your", weight: 1.0 },
-              { label: "First", weight: 3.0 },
-              { label: "FoamTree", weight: 2.0 },
-              { label: "Visualization", weight: 4.0 }
-            ]
-          }
-        });
-      });
+        <article class="search-result row">
+            <div class="col-md-7 excerpt">
+                <h3><a href="#" title="">Voluptatem, exercitationem, suscipit, distinctio</a></h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
+            </div>
+            <span class="clearfix border"></span>
+        </article>
 
+    </section>
+</div>
 
 
-            </script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/index.js"></script>
 </body>
 </html>

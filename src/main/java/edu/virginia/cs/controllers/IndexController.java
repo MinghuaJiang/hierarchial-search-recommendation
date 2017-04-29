@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class IndexController {
+
     @Autowired
     private IndexService writer;
-    @RequestMapping(value="/index")
+    @RequestMapping(value="/index2")
     public String buildIndex() {
         writer.buildIndex();
         return "Index Build Successfully";

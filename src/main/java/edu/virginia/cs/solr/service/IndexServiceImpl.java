@@ -3,7 +3,6 @@ package edu.virginia.cs.solr.service;
 import edu.virginia.cs.solr.model.Tag;
 import edu.virginia.cs.solr.parser.DataSetParser;
 import edu.virginia.cs.solr.repository.TagRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,7 @@ public class IndexServiceImpl implements IndexService{
     public void buildIndex(){
         try {
             List<Tag> tags = DataSetParser.parseTag(environment.getRequiredProperty(TAG_FILE));
-            tags.forEach((x) -> tagRepository.save(x));
+            tagRepository.save(tags);
         } catch (Exception e) {
             e.printStackTrace();
         }

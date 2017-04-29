@@ -32,5 +32,4 @@ public class TagVector {
     public int getFeatureValue(int i){
         return vector[i];
     }
-
 }
