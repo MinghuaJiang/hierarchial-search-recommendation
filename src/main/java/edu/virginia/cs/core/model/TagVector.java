@@ -1,6 +1,7 @@
 package edu.virginia.cs.core.model;
 
-import edu.virginia.cs.solr.model.Tag;
+
+import com.google.code.stackexchange.schema.Tag;
 
 /**
  * Created by cutehuazai on 4/28/17.
