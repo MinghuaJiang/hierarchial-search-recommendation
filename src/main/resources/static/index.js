@@ -1,7 +1,7 @@
 $('#custom-search').keypress(function(event) {
     document.getElementById('search-query').style.display = 'none';
     document.getElementById('search').style.display ='block';
-
+    document.getElementById('graph').style.display = 'inline';
     $('#real-search').val(event.key);
     $('#real-search').focus();
 });
