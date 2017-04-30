@@ -12,117 +12,132 @@
 
 </head>
 <body>
-
-<svg id="graph" width="500" height="800"></svg>
-
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">StackOverFlow Search</a>
+    <div id="graph">
+        <div id="options">
+            <div id="hide_options">(hide)</div>
+            <div id="hideable">
+                Number of Nodes:
+                <select id="numOfNodes">
+                    <option value="8">8</option>
+                    <option value="16">16</option>
+                    <option value="32">32</option>
+                    <option value="64">64</option>
+                    <option value="100">100</option>
+                </select><br><br>
+            </div>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="/login">Sign In</a></li>
-            </ul>
-            <form id="search" class="navbar-form navbar-left">
-                <input id="real-search" type="text" class="form-control"/>
-                <button class="btn btn-info btn-md" type="button" id="search_button">
-                    <i class="glyphicon glyphicon-search"></i>
+        <svg id="innerGraph" width="550" height="650"></svg>
+    </div>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
                 </button>
-            </form>
-        </div>
-    </div>
-</nav>
-
-<div id="search-query" class="container">
-    <div class="row">
-        <div class="col-sm-6 col-sm-offset-3">
-            <div id="custom-search-input">
-                <div class="input-group col-md-12">
-                    <input id="custom-search" type="text" class="form-control input-lg" placeholder="Search" />
-                    <span class="input-group-btn">
-                        <button class="btn btn-info btn-lg" type="submit">
-                            <i class="glyphicon glyphicon-search"></i>
-                        </button>
-                    </span>
-                </div>
+                <a class="navbar-brand" href="#">StackOverFlow Search</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/login">Sign In</a></li>
+                </ul>
+                <form id="search" class="navbar-form navbar-left">
+                    <input id="real-search" type="text" class="form-control"/>
+                    <button class="btn btn-info btn-md" type="button" id="search_button">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </form>
             </div>
         </div>
+    </nav>
+
+    <div id="search-query" class="container">
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                        <input id="custom-search" type="text" class="form-control input-lg" placeholder="Search" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-lg" type="submit">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
-<div id="search-result-container" class="container" style="margin-left:50%">
+    <div id="search-result-container" class="container" style="margin-left:50%">
 
-    <hgroup class="mb20">
-        <h1>Search Results</h1>
-        <h2 class="lead"><strong id="result-count" class="text-danger">3</strong> results were found for <strong id="query" class="text-danger"></strong></h2>
-    </hgroup>
+        <hgroup class="mb20">
+            <h1>Search Results</h1>
+            <h2 class="lead"><strong id="result-count" class="text-danger">3</strong> results were found for <strong id="query" class="text-danger"></strong></h2>
+        </hgroup>
 
-    <section class="col-md-12">
-        <article class="search-result row" id="result0">
-            <div class="col-md-7 excerpt">
-                <h3><a href="#" id="result_title0">Does Spring MVC provide any Java API for constructing web links?</a></h3>
-                <p id="result_content0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags" id="result_tag0">
+        <section class="col-md-12">
+            <article class="search-result row" id="result0">
+                <div class="col-md-7 excerpt">
+                    <h3><a href="#" id="result_title0">Does Spring MVC provide any Java API for constructing web links?</a></h3>
+                    <p id="result_content0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
+                    <div class="tags" id="result_tag0">
+                    </div>
                 </div>
-            </div>
-            <span class="clearfix borda"></span>
-        </article>
+                <span class="clearfix borda"></span>
+            </article>
 
-        <article class="search-result row" id="result1">
-            <div class="col-md-7 excerpt">
-                <h3><a href="#" id="result_title1">Does Spring MVC provide any Java API for constructing web links?</a></h3>
-                <p id="result_content1">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags" id="result_tag1">
+            <article class="search-result row" id="result1">
+                <div class="col-md-7 excerpt">
+                    <h3><a href="#" id="result_title1">Does Spring MVC provide any Java API for constructing web links?</a></h3>
+                    <p id="result_content1">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
+                    <div class="tags" id="result_tag1">
+                    </div>
                 </div>
-            </div>
-            <span class="clearfix borda"></span>
-        </article>
+                <span class="clearfix borda"></span>
+            </article>
 
-        <article class="search-result row" id="result2">
-            <div class="col-md-7 excerpt">
-                <h3><a href="#" id="result_title2">Does Spring MVC provide any Java API for constructing web links?</a></h3>
-                <p id="result_content2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags" id="result_tag2">
+            <article class="search-result row" id="result2">
+                <div class="col-md-7 excerpt">
+                    <h3><a href="#" id="result_title2">Does Spring MVC provide any Java API for constructing web links?</a></h3>
+                    <p id="result_content2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
+                    <div class="tags" id="result_tag2">
+                    </div>
                 </div>
-            </div>
-            <span class="clearfix borda"></span>
-        </article>
+                <span class="clearfix borda"></span>
+            </article>
 
-        <article class="search-result row" id="result3">
-            <div class="col-md-7 excerpt">
-                <h3><a href="#" id="result_title3">Does Spring MVC provide any Java API for constructing web links?</a></h3>
-                <p id="result_content3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags" id="result_tag3">
+            <article class="search-result row" id="result3">
+                <div class="col-md-7 excerpt">
+                    <h3><a href="#" id="result_title3">Does Spring MVC provide any Java API for constructing web links?</a></h3>
+                    <p id="result_content3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
+                    <div class="tags" id="result_tag3">
+                    </div>
                 </div>
-            </div>
-            <span class="clearfix borda"></span>
-        </article>
+                <span class="clearfix borda"></span>
+            </article>
 
-        <article class="search-result row" id="result4">
-            <div class="col-md-7 excerpt">
-                <h3><a href="#" id="result_title4">Does Spring MVC provide any Java API for constructing web links?</a></h3>
-                <p id="result_content4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags" id="result_tag4">
+            <article class="search-result row" id="result4">
+                <div class="col-md-7 excerpt">
+                    <h3><a href="#" id="result_title4">Does Spring MVC provide any Java API for constructing web links?</a></h3>
+                    <p id="result_content4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
+                    <div class="tags" id="result_tag4">
+                    </div>
                 </div>
-            </div>
-            <span class="clearfix borda"></span>
-        </article>
+                <span class="clearfix borda"></span>
+            </article>
 
-    </section>
-</div>
+        </section>
+    </div>
 
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="../static/SimiGraph.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="../static/SimiGraph.js"></script>
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="../static/index.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../static/index.js"></script>
 </body>
 </html>

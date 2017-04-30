@@ -2,7 +2,7 @@
  * Created by VINCENTWEN on 4/29/17.
  */
 
-var svg = d3.select("#graph"),
+var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
@@ -37,16 +37,17 @@ d3.json("../static/graph.json", function(error, json) {
         .attr("class", "node")
         .call(drag);
 
-    // node.append("circle")
-    //     .attr("r", 5)
-    //     .attr("fill", function(d) { return color(d.group); });
+    node.append("circle")
+        .attr("r", 10)
+        .attr("fill", function(d) { return color(d.group); });
 
-    node.append("image")
-        .attr("xlink:href", "https://github.com/favicon.ico")
-        .attr("x", -15)
-        .attr("y", -15)
-        .attr("width", 30)
-        .attr("height", 30);
+    // use same image on each node
+    // node.append("image")
+    //     .attr("xlink:href", "https://github.com/favicon.ico")
+    //     .attr("x", -15)
+    //     .attr("y", -15)
+    //     .attr("width", 30)
+    //     .attr("height", 30);
 
     node.append("text")
         .attr("dx", 20)
@@ -92,3 +93,18 @@ function dragended(d) {
     if (!d3.event.active) simulation.alphaTarget(0);
     d.fx = null, d.fy = null;
 }
+
+var innerGraph = $("#innerGraph");
+console.log(innerGraph.width);
+
+optionBarVisible = true;
+$("#options #hide_options").on("click", function () {
+    if (optionBarVisible) {
+        $("#options").hide();
+        $("#options #hide_options").html("(show graph options)");
+    } else {
+        $("#options").show();
+        $("#options #hide_options").html("(hide)");
+    }
+    optionBarVisible = !optionBarVisible;
+});

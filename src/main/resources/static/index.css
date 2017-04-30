@@ -92,6 +92,50 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 
 #graph{
     display: none;
+    position: fixed;
+    margin-left: 40px;
+    margin-top: 70px;
+    border: 1px solid #DBDBDB;
+    border-radius: 5px;
+    width: 550px;
+    height: 650px;
+}
+
+#innerGraph{
+    /*position: fixed;*/
+    /*margin: 5px auto;*/
+    /*text-align: center;*/
+    /*justify-content:center;*/
+    /*align-items:center;*/
+}
+
+#options{
+    /*border: 1px solid #E2E2E2;*/
+    /*border-radius: 5px;*/
+    /*position: fixed; */
+    top: 20px;
+    left: 20px;
+    padding: 12px;
+    padding-top: 4px;
+    width: 550px;
+    height: 50px;
+    background: rgba(230, 230, 230, 0.85);
+    color: #222;
+    border: solid 1px #aaa;
+    border-radius: 4px;
+    z-index:10;
+}
+
+#hide_options{
+    display: inline-block;
+}
+#hideable{
+    display: inline-block;
+    margin-left: 350px;
+    margin-top: auto;
+    border: 1px solid #FAFAFA;
+    border-radius: 5px;
+    height: 22px;
 }
 
 .link {

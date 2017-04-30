@@ -32,3 +32,8 @@ function onSearch(){
              });
         });
 }
+
+function chooseNodes() {
+    $.get("/numberOfNodesToShow/"+$('#numOfNodes').val()+"/").done();
+}
+
