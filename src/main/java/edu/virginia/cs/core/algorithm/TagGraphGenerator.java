@@ -1,7 +1,7 @@
 package edu.virginia.cs.core.algorithm;
 
+import com.google.code.stackexchange.schema.Tag;
 import edu.virginia.cs.core.model.TagVector;
-import edu.virginia.cs.solr.model.Tag;
 
 import java.util.*;
 
@@ -25,7 +25,7 @@ public class TagGraphGenerator {
 
     public Map<TagVector, List<TagVector>> generateTagGraph(List<TagVector> tagVectors){
         //sort L generality in descending order
-        Collections.sort(tagVectors, (x,y) -> (y.getCount() - x.getCount()));
+        Collections.sort(tagVectors, (x,y) -> (int)(y.getCount() - x.getCount()));
 
         TagVector root = tagVectors.get(0);
         Map<TagVector, List<TagVector>> simiGraph = new HashMap<>();
@@ -73,7 +73,7 @@ public class TagGraphGenerator {
 //            TagVector key = entry.getKey();
             List<TagVector> neighbors = (List<TagVector>)entry.getValue();
             for(TagVector each : neighbors){
-                System.out.print(each.getTag().getTagName());
+                System.out.print(each.getTag().getName());
             }
             System.out.println();
         }
@@ -83,41 +83,41 @@ public class TagGraphGenerator {
         List<TagVector> tagVectors = new ArrayList<>();
         // init tag 1
         Tag t1 = new Tag();
-        t1.setTagName("Machine Learning");
-        t1.setId("101");
-        t1.setCount("5");
+        t1.setName("Machine Learning");
+        t1.setUserId(101);
+        t1.setCount(5);
         TagVector tv1 = new TagVector(t1, 5);
         int[] vector1 = {1,1,1,1,1};
         tv1.setVector(vector1);
         //init tag2
         Tag t2 = new Tag();
-        t2.setTagName("Support Vector Machine");
-        t2.setId("102");
-        t2.setCount("3");
+        t2.setName("Support Vector Machine");
+        t2.setUserId(102);
+        t2.setCount(3);
         TagVector tv2 = new TagVector(t2, 5);
         int[] vector2 = {1,1,1,0,0};
         tv2.setVector(vector2);
         //init tag3
         Tag t3 = new Tag();
-        t3.setTagName("Decision Tree");
-        t3.setId("103");
-        t3.setCount("2");
+        t3.setName("Decision Tree");
+        t3.setUserId(103);
+        t3.setCount(2);
         TagVector tv3 = new TagVector(t3, 5);
         int[] vector3 = {1,0,1,0,0};
         tv3.setVector(vector3);
         //init tag4
         Tag t4 = new Tag();
-        t4.setTagName("Linear Regression");
-        t4.setId("104");
-        t4.setCount("3");
+        t4.setName("Linear Regression");
+        t4.setUserId(104);
+        t4.setCount(3);
         TagVector tv4 = new TagVector(t4, 5);
         int[] vector4 = {0,0,1,1,1};
         tv4.setVector(vector4);
         //init tag5
         Tag t5 = new Tag();
-        t5.setTagName("K Nearest Neighbor");
-        t5.setId("105");
-        t5.setCount("1");
+        t5.setName("K Nearest Neighbor");
+        t5.setUserId(105);
+        t5.setCount(1);
         TagVector tv5 = new TagVector(t5, 5);
         int[] vector5 = {0,0,1,0,0};
         tv5.setVector(vector5);
@@ -133,8 +133,8 @@ public class TagGraphGenerator {
 //        for(int i=0; i<10; i++){
 //            Tag tag = new Tag();
 //            tag.setCount(""+i);
-//            tag.setId(""+i);
-//            tag.setTagName("tag-"+i);
+//            tag.setUserId(""+i);
+//            tag.setName("tag-"+i);
 //            tag.setWikiId(""+i);
 //            TagVector tagVector = new TagVector(tag, 5);
 //            int[] vector = new int[5];

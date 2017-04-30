@@ -43,7 +43,7 @@ public class TagVector {
         for(int i = 0; i < vector.length;i++){
             score += vector[i] * v.getFeatureValue(i);
         }
-        return score / (Math.sqrt(Integer.valueOf(tag.getCount())) * Math.sqrt(Integer.valueOf(v.tag.getCount())));
+        return score / (Math.sqrt(tag.getCount()) * Math.sqrt(v.tag.getCount()));
     }
 
     public int getNumOfFeatures(){
@@ -55,8 +55,8 @@ public class TagVector {
         return vector[i];
     }
 
-    public int getCount(){
-        return Integer.parseInt(tag.getCount());
+    public Long getCount(){
+        return tag.getCount();
     }
 
 }
