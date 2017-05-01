@@ -3,7 +3,9 @@ package edu.virginia.cs.search.config;
 import com.google.code.stackexchange.client.query.StackExchangeApiQueryFactory;
 import com.google.code.stackexchange.schema.StackExchangeSite;
 import edu.virginia.cs.search.api.QuestionSearch;
+import edu.virginia.cs.search.api.TagSearch;
 import edu.virginia.cs.search.impl.QuestionSearchImpl;
+import edu.virginia.cs.search.impl.TagSearchImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -34,4 +36,8 @@ public class APIContext {
         return new QuestionSearchImpl(getQueryFactory());
     }
 
+    @Bean
+    public TagSearch getTagSearch(){
+        return new TagSearchImpl(getQueryFactory());
+    }
 }

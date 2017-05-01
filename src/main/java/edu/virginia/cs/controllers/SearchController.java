@@ -21,6 +21,12 @@ public class SearchController {
 
     @RequestMapping(value="/question/search/relevant/{term}/{page_id}")
     public String searchMostRelevantQuestion(@PathVariable("term") String term, @PathVariable("page_id")int page) {
-        return search.searchQuestions(term, page, User.QuestionSortOrder.MOST_RELEVANT);
+        return search.searchQuestions(term, page);
+    }
+
+
+    @RequestMapping(value="/question/search/count/{term}")
+    public String getMatchedCount(@PathVariable("term") String term) {
+        return search.getMatchCount(term);
     }
 }

@@ -22,6 +22,6 @@ public class TagSearchTest {
 
     @Test
     public void testTagSearch(){
-        search.findByName("java");
+        System.out.println(search.getAllTags().size());
     }
 }

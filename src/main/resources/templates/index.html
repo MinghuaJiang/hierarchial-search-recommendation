@@ -26,9 +26,6 @@
             <a class="navbar-brand" href="#">StackOverFlow Search</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="/login">Sign In</a></li>
-            </ul>
             <form id="search" class="navbar-form navbar-left">
                 <input id="real-search" type="text" class="form-control"/>
                 <button class="btn btn-info btn-md" type="button" id="search_button">
@@ -56,62 +53,65 @@
     </div>
 </div>
 
-<div id="search-result-container" class="container" style="margin-left:50%">
+<div id="search-result-container" class="container" style="margin-left:50%; width:50%">
+    <div class="row">
+    <hgroup class="col-sm-12">
+        <span class="col-sm-12" style="padding-top:35px; ;display:block;">
+        <strong id="result-count" class="text-danger"></strong> results were found for <strong id="query" class="text-danger"></strong>
+        </span>
+        <span class="col-sm-12" >
+            <ul class="pagination sm" id="paging" style="height:0px;">
+          </ul>
+        </span>
 
-    <hgroup class="mb20">
-        <h1>Search Results</h1>
-        <h2 class="lead"><strong id="result-count" class="text-danger">3</strong> results were found for <strong id="query" class="text-danger"></strong></h2>
+
     </hgroup>
-
-    <section class="col-md-12">
+    </div>
+    <section class="col-sm-12" style="margin-top:20px">
         <article class="search-result row" id="result0">
-            <div class="col-md-7 excerpt">
+            <div class="col-sm-12 excerpt">
                 <h3><a href="#" id="result_title0">Does Spring MVC provide any Java API for constructing web links?</a></h3>
                 <p id="result_content0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags" id="result_tag0">
+                <div class="tags col-sm-12" id="result_tag0">
+
                 </div>
             </div>
-            <span class="clearfix borda"></span>
         </article>
 
         <article class="search-result row" id="result1">
-            <div class="col-md-7 excerpt">
+            <div class="col-sm-12 excerpt">
                 <h3><a href="#" id="result_title1">Does Spring MVC provide any Java API for constructing web links?</a></h3>
                 <p id="result_content1">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags" id="result_tag1">
+                <div class="tags col-sm-12" id="result_tag1">
                 </div>
             </div>
-            <span class="clearfix borda"></span>
         </article>
 
         <article class="search-result row" id="result2">
-            <div class="col-md-7 excerpt">
+            <div class="col-sm-12 excerpt">
                 <h3><a href="#" id="result_title2">Does Spring MVC provide any Java API for constructing web links?</a></h3>
                 <p id="result_content2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags" id="result_tag2">
+                <div class="tags col-sm-12" id="result_tag2">
                 </div>
             </div>
-            <span class="clearfix borda"></span>
         </article>
 
         <article class="search-result row" id="result3">
-            <div class="col-md-7 excerpt">
+            <div class="col-sm-12 excerpt">
                 <h3><a href="#" id="result_title3">Does Spring MVC provide any Java API for constructing web links?</a></h3>
                 <p id="result_content3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags" id="result_tag3">
+                <div class="tags col-sm-12" id="result_tag3">
                 </div>
             </div>
-            <span class="clearfix borda"></span>
         </article>
 
         <article class="search-result row" id="result4">
-            <div class="col-md-7 excerpt">
+            <div class="col-sm-12 excerpt">
                 <h3><a href="#" id="result_title4">Does Spring MVC provide any Java API for constructing web links?</a></h3>
                 <p id="result_content4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags" id="result_tag4">
+                <div class="tags col-sm-12" id="result_tag4">
                 </div>
             </div>
-            <span class="clearfix borda"></span>
         </article>
 
     </section>
@@ -120,6 +120,8 @@
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/Gruntfile.js"></script>
+<script src="/jquery.twbsPagination.min.js"></script>
 <script src="/index.js"></script>
 </body>
 </html>
