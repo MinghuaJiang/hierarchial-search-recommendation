@@ -14,6 +14,7 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var link = svg.append("g")
     .attr("class", "link")
+    .attr("stroke","#ccc")
     .selectAll("line");
 
 var drag = d3.drag()
@@ -97,14 +98,14 @@ function dragended(d) {
 var innerGraph = $("#innerGraph");
 console.log(innerGraph.width);
 
-optionBarVisible = true;
-$("#options #hide_options").on("click", function () {
-    if (optionBarVisible) {
-        $("#options").hide();
-        $("#options #hide_options").html("(show graph options)");
-    } else {
-        $("#options").show();
-        $("#options #hide_options").html("(hide)");
-    }
-    optionBarVisible = !optionBarVisible;
-});
+//optionBarVisible = true;
+//$("#options #hide_options").on("click", function () {
+  //  if (optionBarVisible) {
+    //    $("#options").hide();
+      //  $("#options #hide_options").html("(show graph options)");
+    //} else {
+      //  $("#options").show();
+        //$("#options #hide_options").html("(hide)");
+    //}
+    //optionBarVisible = !optionBarVisible;
+//});

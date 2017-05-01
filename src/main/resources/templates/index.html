@@ -57,20 +57,19 @@
 <div id="search-result-container" class="container-fluid">
     <div class="row">
         <div id="graph" class="col-sm-6 main" style="height:60px">
-            <div id="options" style="margin-top:60px">
-                <div id="hide_options">(hide)</div>
-                <div id="hideable">
-                    Number of Nodes:
-                    <select id="numOfNodes">
-                        <option value="8">8</option>
-                        <option value="16">16</option>
-                        <option value="32">32</option>
-                        <option value="64">64</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
+            <div class="dropdown" style="margin-top:60px">
+                <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="/page.html">
+                    Number Of Nodes <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu" id="numOfNodes">
+                    <li><a href="#">8</a></li>
+                    <li><a href="#">16</a></li>
+                    <li><a href="#">32</a></li>
+                    <li><a href="#">64</a></li>
+                    <li><a href="#">100</a></li>
+                </ul>
             </div>
-            <svg id="innerGraph" class="col-sm-12" height="800px"></svg>
+            <svg id="innerGraph" class="col-sm-12" width="500" height="550"></svg>
         </div>
 
     <hgroup class="col-sm-6 main col-sm-offset-6">
@@ -134,10 +133,7 @@
         </section>
     </div>
 
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="../static/SimiGraph.js"></script>
-
+<script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="/Gruntfile.js"></script>

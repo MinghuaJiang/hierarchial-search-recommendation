@@ -125,24 +125,11 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
     z-index:10;
 }
 
-#hide_options{
-    display: inline-block;
-}
-#hideable{
-    display: inline-block;
-    margin-left: 350px;
-    margin-top: auto;
-    border: 1px solid #FAFAFA;
-    border-radius: 5px;
-    height: 22px;
-}
-
-.link {
+g .link {
     stroke: #ccc;
 }
 
 .node text {
     pointer-events: none;
     font: 10px sans-serif;
-
 }
