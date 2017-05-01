@@ -132,7 +132,7 @@ public class TagGraphGenerator {
 
 //        for(int i=0; i<10; i++){
 //            Tag tag = new Tag();
-//            tag.setCount(""+i);
+//            tag.setTagDistinctCount(""+i);
 //            tag.setUserId(""+i);
 //            tag.setName("tag-"+i);
 //            tag.setWikiId(""+i);
