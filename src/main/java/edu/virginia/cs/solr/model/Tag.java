@@ -14,8 +14,8 @@ public class Tag {
     private String id;
     @Indexed(name = "tagName_t")
     private String tagName;
-    @Indexed(name = "count_i")
-    private String tagDistinctCount;
+    @Indexed(name = "count_l")
+    private long tagDistinctCount;
     @Indexed(name = "wikiId_s")
     private String wikiId;
 
@@ -35,11 +35,11 @@ public class Tag {
         this.tagName = tagName;
     }
 
-    public String getTagDistinctCount() {
+    public long getTagDistinctCount() {
         return tagDistinctCount;
     }
 
-    public void setTagDistinctCount(String tagDistinctCount) {
+    public void setTagDistinctCount(long tagDistinctCount) {
         this.tagDistinctCount = tagDistinctCount;
     }
 
