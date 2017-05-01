@@ -2,33 +2,16 @@
 <html>
 <head>
     <title>
-        Dashboard
+        Hierachial Search
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- Bootstrap -->
     <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="../static/index.css"/>
+    <link rel="stylesheet" href="/index.css"/>
 
 </head>
 <body>
-    <div id="graph">
-        <div id="options">
-            <div id="hide_options">(hide)</div>
-            <div id="hideable">
-                Number of Nodes:
-                <select id="numOfNodes">
-                    <option value="8">8</option>
-                    <option value="16">16</option>
-                    <option value="32">32</option>
-                    <option value="64">64</option>
-                    <option value="100">100</option>
-                </select><br><br>
-            </div>
-        </div>
-        <svg id="innerGraph" width="550" height="650"></svg>
-    </div>
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -68,26 +51,46 @@
         </div>
     </div>
 
-<div id="search-result-container" class="container" style="margin-left:50%; width:50%">
+
+
+
+<div id="search-result-container" class="container-fluid">
     <div class="row">
-    <hgroup class="col-sm-12">
-        <span class="col-sm-12" style="padding-top:35px;display:block;">
+        <div id="graph" class="col-sm-6 main" style="height:60px">
+            <div id="options" style="margin-top:60px">
+                <div id="hide_options">(hide)</div>
+                <div id="hideable">
+                    Number of Nodes:
+                    <select id="numOfNodes">
+                        <option value="8">8</option>
+                        <option value="16">16</option>
+                        <option value="32">32</option>
+                        <option value="64">64</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+            <svg id="innerGraph" class="col-sm-12" height="800px"></svg>
+        </div>
+
+    <hgroup class="col-sm-6 main col-sm-offset-6">
+        <span class="col-sm-12" style="display:block;padding-top:5px;padding-left:0px;">
         <strong id="result-count" class="text-danger"></strong> results were found for <strong id="query" class="text-danger"></strong>
         </span>
-        <span class="col-sm-12" >
-            <ul class="pagination sm" id="paging" style="height:0px;">
+        <span class="col-sm-12" style="padding-left:0px;">
+            <ul class="pagination sm" id="paging" style="height:0px;margin-top:0px">
           </ul>
         </span>
 
 
     </hgroup>
     </div>
-    <section class="col-sm-12" style="margin-top:20px">
+    <section class="col-sm-6 main col-sm-offset-6" style="margin-top:10px">
         <article class="search-result row" id="result0">
             <div class="col-sm-12 excerpt">
                 <h3><a href="#" id="result_title0">Does Spring MVC provide any Java API for constructing web links?</a></h3>
                 <p id="result_content0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags col-sm-12" id="result_tag0">
+                <div class="col-sm-12" id="result_tag0" style="padding-left:0px">
 
                 </div>
             </div>
@@ -97,7 +100,7 @@
             <div class="col-sm-12 excerpt">
                 <h3><a href="#" id="result_title1">Does Spring MVC provide any Java API for constructing web links?</a></h3>
                 <p id="result_content1">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags col-sm-12" id="result_tag1">
+                <div class="col-sm-12" id="result_tag1" style="padding-left:0px">
                 </div>
             </div>
         </article>
@@ -106,7 +109,7 @@
             <div class="col-sm-12 excerpt">
                 <h3><a href="#" id="result_title2">Does Spring MVC provide any Java API for constructing web links?</a></h3>
                 <p id="result_content2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags col-sm-12" id="result_tag2">
+                <div class="tags col-sm-12" id="result_tag2" style="padding-left:0px">
                 </div>
             </div>
         </article>
@@ -115,7 +118,7 @@
             <div class="col-sm-12 excerpt">
                 <h3><a href="#" id="result_title3">Does Spring MVC provide any Java API for constructing web links?</a></h3>
                 <p id="result_content3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags col-sm-12" id="result_tag3">
+                <div class="tags col-sm-12" id="result_tag3" style="padding-left:0px">
                 </div>
             </div>
         </article>
@@ -124,7 +127,7 @@
             <div class="col-sm-12 excerpt">
                 <h3><a href="#" id="result_title4">Does Spring MVC provide any Java API for constructing web links?</a></h3>
                 <p id="result_content4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, exercitationem, suscipit, distinctio, qui sapiente aspernatur molestiae non corporis magni sit sequi iusto debitis delectus doloremque.</p>
-                <div class="tags col-sm-12" id="result_tag4">
+                <div class="tags col-sm-12" id="result_tag4" style="padding-left:0px">
                 </div>
             </div>
         </article>
@@ -140,5 +143,6 @@
 <script src="/Gruntfile.js"></script>
 <script src="/jquery.twbsPagination.min.js"></script>
 <script src="/index.js"></script>
+<script src="/SimiGraph.js"></script>
 </body>
 </html>
