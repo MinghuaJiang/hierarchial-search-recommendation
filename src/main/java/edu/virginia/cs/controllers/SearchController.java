@@ -3,6 +3,7 @@ package edu.virginia.cs.controllers;
 
 import com.google.code.stackexchange.schema.User;
 import edu.virginia.cs.search.api.QuestionSearch;
+import edu.virginia.cs.solr.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,16 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SearchController {
     @Autowired
-    private QuestionSearch search;
+    private QuestionRepository repository;
 
     @RequestMapping(value="/question/search/relevant/{term}/{page_id}")
     public String searchMostRelevantQuestion(@PathVariable("term") String term, @PathVariable("page_id")int page) {
-        return search.searchQuestions(term, page);
+        return repository.searchQuestions(term, page);
     }
 
-
+    
     @RequestMapping(value="/question/search/count/{term}")
     public String getMatchedCount(@PathVariable("term") String term) {
-        return search.getMatchCount(term);
+        return String.valueOf(repository.getMatchCount(term));
     }
 }

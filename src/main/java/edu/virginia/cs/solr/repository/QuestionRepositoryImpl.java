@@ -2,6 +2,12 @@ package edu.virginia.cs.solr.repository;
 
 import edu.virginia.cs.search.api.QuestionSearch;
 import edu.virginia.cs.solr.model.Question;
+import edu.virginia.cs.solr.model.QuestionResult;
+import edu.virginia.cs.solr.model.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.Criteria;
 import org.springframework.data.solr.core.query.SimpleQuery;
@@ -19,13 +25,19 @@ public class QuestionRepositoryImpl implements QuestionSearch {
     }
 
     @Override
-    public List<Question> getQuestionsByTag(String tagName, int pageNum) {
+    public QuestionResult getQuestionsByTag(String tagName, int pageNum) {
         return null;
     }
 
     @Override
-    public List<Question> searchQuestionsBySearchTerm(String searchTerm, int pageNum) {
-        return null;
+    public QuestionResult searchQuestionsBySearchTerm(String searchTerm, int pageNum) {
+        Sort sort = new Sort(Sort.Direction.ASC, "tagName_s");
+        Criteria criteria = Criteria.where("title_t").expression(searchTerm).or(Criteria.where("body_t").expression(searchTerm)).and(Criteria.where("answers_l").greaterThanEqual(1));
+        Pageable pageRequest = new PageRequest(pageNum - 1, 5, sort);
+        SimpleQuery query = new SimpleQuery(criteria, pageRequest);
+        Page results = template.queryForPage(query, Question.class);
+        QuestionResult result = new QuestionResult(results.getTotalElements(), results.getTotalPages(), results.getContent());
+        return result;
     }
 
     @Override

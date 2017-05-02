@@ -1,7 +1,6 @@
-package edu.virginia.cs.search.api;
+package edu.virginia.cs.solr.repository;
 
 import edu.virginia.cs.solr.model.Question;
-import edu.virginia.cs.solr.model.QuestionResult;
 
 import java.util.List;
 
@@ -9,9 +8,9 @@ import java.util.List;
  * Created by cutehuazai on 4/29/17.
  */
 public interface QuestionSearch {
-    public QuestionResult getQuestionsByTag(String tagName, int pageNum);
+    public List<Question> getQuestionsByTag(String tagName, int pageNum);
 
-    public QuestionResult searchQuestionsBySearchTerm(String searchTerm, int pageNum);
+    public List<Question> searchQuestionsBySearchTerm(String searchTerm, int pageNum);
 
     public String searchQuestions(String searchTerm, int pageNum);
 

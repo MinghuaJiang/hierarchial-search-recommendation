@@ -5,7 +5,6 @@ import com.google.code.stackexchange.schema.StackExchangeSite;
 import edu.virginia.cs.search.api.QuestionSearch;
 import edu.virginia.cs.search.api.TagSearch;
 import edu.virginia.cs.search.impl.QuestionSearchImpl;
-import edu.virginia.cs.search.impl.TagSearchImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -16,13 +15,13 @@ import javax.annotation.Resource;
 /**
  * Created by cutehuazai on 4/29/17.
  */
-@Configuration
-@PropertySource("classpath:application.properties")
+//@Configuration
+//@PropertySource("classpath:application.properties")
 public class APIContext {
-    @Resource
-    private Environment environment;
+    /*//@Resource
+    //private Environment environment;
 
-    private static final String API_KEY = "AdhEvgh0PxNpFvkX0JdAHg((";
+    //private static final String API_KEY = "AdhEvgh0PxNpFvkX0JdAHg((";
     @Bean
     public StackExchangeApiQueryFactory getQueryFactory(){
         StackExchangeApiQueryFactory queryFactory = StackExchangeApiQueryFactory
@@ -35,9 +34,5 @@ public class APIContext {
     public QuestionSearch getQuestionSearch(){
         return new QuestionSearchImpl(getQueryFactory());
     }
-
-    @Bean
-    public TagSearch getTagSearch(){
-        return new TagSearchImpl(getQueryFactory());
-    }
+*/
 }

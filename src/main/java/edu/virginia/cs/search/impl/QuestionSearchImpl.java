@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.virginia.cs.search.api.QuestionSearch;
 import edu.virginia.cs.solr.model.Question;
+import edu.virginia.cs.solr.model.QuestionResult;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -35,12 +36,12 @@ public class QuestionSearchImpl implements QuestionSearch {
     }
 
     @Override
-    public List<Question> getQuestionsByTag(String tagName, int pageNum) {
+    public QuestionResult getQuestionsByTag(String tagName, int pageNum) {
         return null;
     }
 
     @Override
-    public List<Question> searchQuestionsBySearchTerm(String searchTerm, int pageNum) {
+    public QuestionResult searchQuestionsBySearchTerm(String searchTerm, int pageNum) {
         return null;
     }
 

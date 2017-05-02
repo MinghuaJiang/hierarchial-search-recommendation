@@ -5,6 +5,11 @@ package edu.virginia.cs.solr.config;
  */
 
 
+import edu.virginia.cs.solr.index.IndexService;
+import edu.virginia.cs.solr.index.IndexServiceImpl;
+import edu.virginia.cs.solr.parser.StreamBasedXMLParser;
+import edu.virginia.cs.solr.repository.QuestionRepository;
+import edu.virginia.cs.solr.repository.QuestionRepositoryImpl;
 import edu.virginia.cs.solr.repository.TagRepository;
 import edu.virginia.cs.solr.repository.TagRepositoryImpl;
 import org.apache.solr.client.solrj.SolrClient;
@@ -45,5 +50,21 @@ public class SolrContext {
     public TagRepository tagRepository() throws Exception {
         return new SolrRepositoryFactory(solrTemplate())
                 .getRepository(TagRepository.class, new TagRepositoryImpl(solrTemplate()));
+    }
+
+    @Bean
+    public QuestionRepository questionRepository() throws Exception {
+        return new SolrRepositoryFactory(solrTemplate())
+                .getRepository(QuestionRepository.class, new QuestionRepositoryImpl(solrTemplate()));
+    }
+
+    @Bean
+    public IndexService indexService() throws Exception {
+        return new IndexServiceImpl();
+    }
+
+    @Bean
+    public StreamBasedXMLParser getParser(){
+        return new StreamBasedXMLParser();
     }
 }
