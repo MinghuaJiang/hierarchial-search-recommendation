@@ -24,7 +24,7 @@ public class Question {
 
     @Indexed(name = "tagName_ss")
     @XmlAttribute(name="Tags")
-    private List<Tag> tags;
+    private List<String> tags;
 
     @XmlAttribute(name="Title")
     @Indexed(name = "title_t")
@@ -68,7 +68,7 @@ public class Question {
         return id;
     }
 
-    public List<Tag> getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
@@ -104,7 +104,7 @@ public class Question {
         this.id = id;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 

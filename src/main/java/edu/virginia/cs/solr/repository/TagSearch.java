@@ -13,6 +13,7 @@ import java.util.TreeSet;
  * Created by cutehuazai on 4/29/17.
  */
 public interface TagSearch {
+    public Tag getTagByName(String tagName);
     public List<Tag> getAllTags();
     public TreeSet<Tag> getRankingTags(List<Topic> topK) throws IOException, SolrServerException;
 }

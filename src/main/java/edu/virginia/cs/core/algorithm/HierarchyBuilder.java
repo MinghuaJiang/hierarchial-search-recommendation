@@ -49,9 +49,11 @@ public class HierarchyBuilder {
                 }
             }
         }
+        System.out.println("start to build k topics");
         List<Topic> topics = generateTopKTopics(100);
+        System.out.println("start to build ranking tags");
         TreeSet<Tag> tags = getRankingTags(topics);
-
+        System.out.println("start to build hierarchy");
         Tag top = tags.pollFirst();
         hierarchy = new Hierarchy();
         HierarchyNode firstNode = new HierarchyNode(top);

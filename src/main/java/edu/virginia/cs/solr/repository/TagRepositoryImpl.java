@@ -31,6 +31,16 @@ public class TagRepositoryImpl implements TagSearch{
     public TagRepositoryImpl(SolrTemplate template){
         this.template = template;
     }
+
+    @Override
+    public Tag getTagByName(String tagName) {
+        Criteria criteria = Criteria.where("tagName_s").isNotNull();
+        SimpleQuery query = new SimpleQuery(criteria);
+        Page results = template.queryForPage(query, Tag.class);
+        List<Tag> tags = results.getContent();
+        return tags.get(0);
+    }
+
     @Override
     public List<Tag> getAllTags() {
         List<Tag> result = new ArrayList<Tag>();

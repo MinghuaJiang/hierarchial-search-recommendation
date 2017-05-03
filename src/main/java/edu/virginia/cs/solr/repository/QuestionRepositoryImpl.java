@@ -1,7 +1,5 @@
 package edu.virginia.cs.solr.repository;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import edu.virginia.cs.core.algorithm.HierarchyBuilder;
 import edu.virginia.cs.core.model.HierarchyNode;
 import edu.virginia.cs.solr.model.Question;
@@ -30,6 +28,8 @@ import java.util.*;
 public class QuestionRepositoryImpl implements QuestionSearch {
     @Autowired
     private HierarchyBuilder factory;
+    @Autowired
+    private TagRepository repository;
     private SolrTemplate template;
     private static final int PAGE_SIZE = 5;
 
@@ -46,12 +46,12 @@ public class QuestionRepositoryImpl implements QuestionSearch {
         Page<Question> results = template.queryForPage(query, Question.class);
         int count = 0;
         for (Question question : results) {
-            List<Tag> tags = question.getTags();
+            List<String> tags = question.getTags();
             String topic = null;
             double maxTF = 0.0;
-            String tagName = tags.get((int)(Math.random() * tags.size())).toString();
-            /*for(Tag tag: tags){
-                double tf = getTermFrequency(tag.getTagName(), count).get("");
+            String tagName = tags.get((int)(Math.random() * tags.size()));
+            /*for(String tag: tags){
+                double tf = getTermFrequency(tag, count).get("");
                 if(tf > maxTF){
                     maxTF = tf;
                     topic = tag;
@@ -121,7 +121,11 @@ public class QuestionRepositoryImpl implements QuestionSearch {
                 query(Question.class.getAnnotation(SolrDocument.class).solrCoreName(), query);
         List<Question> results = template.convertQueryResponseToBeans(resp, Question.class);
         Set<Tag> set = new HashSet();
-        results.forEach((x) -> set.addAll(x.getTags()));
+        results.forEach((x) ->{
+            for(String tag: x.getTags()){
+                set.add(repository.getTagByName(tag));
+            }
+        });
         HierarchyNode central = calculateCentralTag(set);
         String cluster = getNodeCluster(central, nodeCount);
         return cluster;
