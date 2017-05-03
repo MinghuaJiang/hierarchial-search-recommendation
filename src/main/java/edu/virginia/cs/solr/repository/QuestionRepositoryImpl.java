@@ -7,6 +7,7 @@ import edu.virginia.cs.core.model.HierarchyNode;
 import edu.virginia.cs.solr.model.Question;
 import edu.virginia.cs.solr.model.QuestionResult;
 import edu.virginia.cs.solr.model.Tag;
+import edu.virginia.cs.solr.model.Topic;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -38,11 +39,28 @@ public class QuestionRepositoryImpl implements QuestionSearch {
 
 
     @Override
-    public Page<Question> getAllQuestions(int page) {
+    public Page<Question> getAllQuestions(int page) throws Exception {
         Pageable pageRequest = new PageRequest(page, 1000);
         Criteria criteria = Criteria.where("title_t").isNotNull();
         SimpleQuery query = new SimpleQuery(criteria, pageRequest);
         Page<Question> results = template.queryForPage(query, Question.class);
+        int count = 0;
+        for (Question question : results) {
+            List<Tag> tags = question.getTags();
+            String topic = null;
+            double maxTF = 0.0;
+            String tagName = tags.get((int)(Math.random() * tags.size())).toString();
+            /*for(Tag tag: tags){
+                double tf = getTermFrequency(tag.getTagName(), count).get("");
+                if(tf > maxTF){
+                    maxTF = tf;
+                    topic = tag;
+                }
+            }*/
+            count++;
+            QuestionResult result = this.getQuestionsByTagName(tagName, 0);
+            question.setTopic(new Topic(tagName, result.getTotalCount()));
+        }
         return results;
     }
 
@@ -55,6 +73,21 @@ public class QuestionRepositoryImpl implements QuestionSearch {
         criteria = Criteria.where("tagName_ss").expression(tag2).and("tagName_ss").expression(tag1).not();
         query = new SimpleQuery(criteria);
         result[1] = template.count(Question.class.getAnnotation(SolrDocument.class).solrCoreName(), query);
+        return result;
+    }
+
+    @Override
+    public Map<String, Double> getTermFrequency(String tagName, int count) throws IOException, SolrServerException {
+        SolrQuery query = new SolrQuery();
+        String key = "termfreq('body_t'," + tagName + ")";
+        query.set("q", "*:*");
+        query.set("fl", key);
+        query.setRows(1);
+        query.setStart(count);
+        QueryResponse resp = template.getSolrClient().
+                query(Question.class.getAnnotation(SolrDocument.class).solrCoreName(), query);
+        Map<String, Double> result = new HashMap<>();
+        result.put("tf", Double.valueOf(resp.getResults().get(0).getFieldValue(key).toString()));
         return result;
     }
 
@@ -88,20 +121,20 @@ public class QuestionRepositoryImpl implements QuestionSearch {
                 query(Question.class.getAnnotation(SolrDocument.class).solrCoreName(), query);
         List<Question> results = template.convertQueryResponseToBeans(resp, Question.class);
         Set<Tag> set = new HashSet();
-        results.forEach((x)-> set.addAll(x.getTags()));
+        results.forEach((x) -> set.addAll(x.getTags()));
         HierarchyNode central = calculateCentralTag(set);
         String cluster = getNodeCluster(central, nodeCount);
         return cluster;
     }
 
-    private String getNodeCluster(HierarchyNode central, int count){
+    private String getNodeCluster(HierarchyNode central, int count) {
         return "";
     }
 
-    private HierarchyNode calculateCentralTag(Set<Tag> tags){
+    private HierarchyNode calculateCentralTag(Set<Tag> tags) {
         List<HierarchyNode> list = new ArrayList<HierarchyNode>();
         double avgScore = 0;
-        for(Tag tag: tags){
+        for (Tag tag : tags) {
             HierarchyNode node = factory.getHierarchy().getHierachyNode(tag.getTagName());
             list.add(node);
             avgScore += node.getScore();
@@ -109,8 +142,8 @@ public class QuestionRepositoryImpl implements QuestionSearch {
         avgScore = avgScore / tags.size();
         HierarchyNode result = null;
         double min = Double.MAX_VALUE;
-        for(HierarchyNode node: list){
-            if(Math.abs(node.getScore() - avgScore) < min){
+        for (HierarchyNode node : list) {
+            if (Math.abs(node.getScore() - avgScore) < min) {
                 result = node;
                 min = Math.abs(node.getScore() - avgScore);
             }
@@ -120,7 +153,7 @@ public class QuestionRepositoryImpl implements QuestionSearch {
     }
 
     @Override
-    public List<Question> recommendQuestionsByTag(String tagName, int topCount) throws Exception{
+    public List<Question> recommendQuestionsByTag(String tagName, int topCount) throws Exception {
         List<Question> result = new ArrayList<Question>();
         Queue<Question> queue = new PriorityQueue<Question>(topCount, new Comparator<Question>() {
             @Override
@@ -145,24 +178,23 @@ public class QuestionRepositoryImpl implements QuestionSearch {
         Page results = template.queryForPage(query, Question.class);
         List<Question> questions = results.getContent();
         questions.forEach((x) -> queue.offer(x));
-        while(results.hasNext() && pageRequest.getPageNumber() <= 10){
+        while (results.hasNext() && pageRequest.getPageNumber() <= 10) {
             pageRequest = pageRequest.next();
             query = new SimpleQuery(criteria, pageRequest);
             results = template.queryForPage(query, Question.class);
             questions = results.getContent();
-            for(Question question: questions){
-                if(question.getScore() <= queue.peek().getScore()){
+            for (Question question : questions) {
+                if (question.getScore() <= queue.peek().getScore()) {
                     continue;
-                }else{
+                } else {
                     queue.poll();
                     queue.offer(question);
                 }
             }
         }
-        while(!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             result.add(0, queue.poll());
         }
-        Gson gson = new GsonBuilder().create();
         return result;
     }
 
@@ -183,6 +215,16 @@ public class QuestionRepositoryImpl implements QuestionSearch {
         List<Question> results = template.convertQueryResponseToBeans(resp, Question.class);
         QuestionResult result = new QuestionResult(resp.getResults().getNumFound(),
                 (int) ((resp.getResults().getNumFound() - 1) / PAGE_SIZE + 1), results);
+        return result;
+    }
+
+    @Override
+    public QuestionResult getQuestionsByTagName(String tagName, int pageNum) throws Exception {
+        Criteria criteria = Criteria.where("tagName_ss").expression(tagName);
+        SimpleQuery query = new SimpleQuery(criteria);
+        Page<Question> questions = template.queryForPage(query, Question.class);
+        QuestionResult result = new QuestionResult(questions.getTotalElements(), questions.getTotalPages(),
+                questions.getContent());
         return result;
     }
 }

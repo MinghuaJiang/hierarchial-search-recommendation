@@ -38,4 +38,11 @@ public class SearchController {
         Gson gson = new GsonBuilder().create();
         return gson.toJson(result);
     }
+
+    @RequestMapping(value="/recommend/{term}/{count}")
+    public String recommendTags(@PathVariable("term") String term, @PathVariable("count")int count) throws Exception{
+        String result = repository.recommendNode(term, count);
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(result);
+    }
 }

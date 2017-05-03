@@ -2,6 +2,8 @@ package edu.virginia.cs.solr.repository;
 
 import edu.virginia.cs.solr.model.Tag;
 import edu.virginia.cs.solr.model.Topic;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +13,7 @@ import org.springframework.data.solr.core.query.Criteria;
 import org.springframework.data.solr.core.query.SimpleQuery;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,6 +24,9 @@ import java.util.TreeSet;
  */
 @Repository
 public class TagRepositoryImpl implements TagSearch{
+    @Autowired
+    private QuestionRepository questionRepository;
+
     private SolrTemplate template;
     public TagRepositoryImpl(SolrTemplate template){
         this.template = template;
@@ -45,7 +51,7 @@ public class TagRepositoryImpl implements TagSearch{
     }
 
     @Override
-    public TreeSet<Tag> getRankingTags(List<Topic> topK) {
+    public TreeSet<Tag> getRankingTags(List<Topic> topK) throws IOException, SolrServerException {
         TreeSet<Tag> tags = new TreeSet<>(new Comparator<Tag>() {
             @Override
             public int compare(Tag t1, Tag t2) {
@@ -57,12 +63,14 @@ public class TagRepositoryImpl implements TagSearch{
         List<Tag> lists = getAllTags();
         double maxScore = 0;
         for(Tag tag: lists){
+            tag.setTagRawCount(questionRepository.getTotalTermFrequency(tag.getTagName()));
             tag.calculateITScore(topK, lists);
             maxScore = Math.max(maxScore, tag.getScore());
             tags.add(tag);
         }
         for(Tag tag: tags){
             tag.normalizeScore(maxScore);
+
         }
         return tags;
     }

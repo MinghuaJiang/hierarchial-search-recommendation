@@ -8,6 +8,7 @@ import org.springframework.data.solr.core.query.result.Cursor;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cutehuazai on 4/29/17.
@@ -17,12 +18,16 @@ public interface QuestionSearch {
 
     public QuestionResult searchQuestionsBySearchTerm(String searchTerm, int pageNum) throws Exception;
 
-    public Page<Question> getAllQuestions(int page);
+    public QuestionResult getQuestionsByTagName(String searchTerm, int pageNum) throws Exception;
+
+    public Page<Question> getAllQuestions(int page) throws Exception;
 
     public long[] getQuestionsByTagDifference(String tag1, String tag2);
 
     public int getTotalTermFrequency(String tagName) throws IOException, SolrServerException;
 
     public String recommendNode(String searchTerm, int nodeCount) throws Exception;
+
+    public Map<String, Double> getTermFrequency(String tagName, int count) throws IOException, SolrServerException;
 }
 
