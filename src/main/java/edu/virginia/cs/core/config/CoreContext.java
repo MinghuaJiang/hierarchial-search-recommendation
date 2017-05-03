@@ -28,7 +28,7 @@ public class CoreContext {
         File file = new File(outputFile);
         try {
             builder.buildHierachy();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return builder;
