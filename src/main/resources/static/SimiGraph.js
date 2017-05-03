@@ -53,7 +53,7 @@ d3.json("/graph.json", function(error, json) {
          $.get("/recommendation/"+ d.name +"/" + count).done(function (obj) {
              $('node').hide("slow");
              $('link').hide("slow");
-
+             console.log(obj);
              var recommendWindow = d3.select("svg")
                  .selectAll("g")
                  .data(obj)
