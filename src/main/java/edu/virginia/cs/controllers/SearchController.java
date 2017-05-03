@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -41,7 +42,7 @@ public class SearchController {
 
     @RequestMapping(value="/recommendation/tag/{term}/{count}")
     public String recommendTags(@PathVariable("term") String term, @PathVariable("count")int count) throws Exception{
-        String result = repository.recommendNode(term, count);
+        Map<String,Object> result = repository.recommendNode(term, count);
         Gson gson = new GsonBuilder().create();
         return gson.toJson(result);
     }

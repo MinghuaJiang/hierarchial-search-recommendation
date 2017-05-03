@@ -21,7 +21,6 @@ public class HierarchyNode {
 
     public HierarchyNode(Tag node) {
         this.node = node;
-        this.parentNode = new HierarchyNode();
         this.children = new ArrayList<>();
     }
 
