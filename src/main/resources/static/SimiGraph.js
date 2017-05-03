@@ -57,7 +57,9 @@ d3.json("/graph.json", function(error, json) {
              // console.log(obj);
              // console.log(this);
              var json = JSON.parse(obj);
-             console.log(json.questions);
+             console.log("#" + json.questions);
+             console.log("&" + json["questions"]);
+             console.log("*" + json['questions'])
 
              var recommendWindow = d3.select("svg")
                  .append("g")
@@ -85,7 +87,7 @@ d3.json("/graph.json", function(error, json) {
 
              var recommend = recommendWindow
                  .selectAll("text")
-                 .data(json.questions)
+                 .data(json)
                  .enter()
                  .append("text")
                  .attr("class", "textBox")
@@ -100,9 +102,8 @@ d3.json("/graph.json", function(error, json) {
                  .text(function (x) {
                      // alert(x.questionTitle); not working
                      // alert(x["questionTitle"]); still not working
-                     // alert(x["questionTitle"]);
-                     alert(x.questionTitle);
-                     x['questionTitle'];
+                     // alert(x.questionTitle); // work !!!!!
+                     x.questionTitle;
                  });
 
              $(document).ready(function(){
