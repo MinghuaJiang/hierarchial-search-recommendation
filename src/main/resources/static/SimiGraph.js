@@ -50,47 +50,63 @@ d3.json("/graph.json", function(error, json) {
     
     node.on("click", function (d) {
          var count = 8;
-         $.get("/recommendation/"+ d.name +"/" + count).done(function (obj) {
-             $('node').hide("slow");
-             $('link').hide("slow");
-             console.log(obj);
+         $.get("/recommendation/question/"+ d.name +"/" + count).done(function (obj) {
+             node.style("opacity", 0);
+             link.style("opacity", 0);
+             // console.log(d);
+             // console.log(obj);
+             // console.log(this);
+             var json = JSON.parse(obj);
+             console.log(json.questions);
+
              var recommendWindow = d3.select("svg")
-                 .selectAll("g")
-                 .data(obj)
-                 .enter()
                  .append("g")
                  .attr("class", "recommendPage");
 
-             var tag = recommendWindow
+             var centralTag = recommendWindow
+                 .append("g")
+                 .attr("class", "centralTag")
+                 .attr("transform", "translate(200,300)");
+
+             var tag = centralTag
                  .append("circle")
-                 .attr("r", 15)
+                 .attr("r", 100)
                  .attr("fill", "#ffccff");
 
-             var tagName = recommendWindow
+             var tagName = centralTag
                  .append("text")
-                 .attr("dx", -15)
+                 .attr("dx", -30)
                  .attr("dy", ".35em")
-                 .text(function (obj) {
-                     return obj.name;
+                 .attr("font-size", "20px")
+                 .attr("font-color", "white")
+                 .text(function () {
+                     return d.name;
                  });
 
              var recommend = recommendWindow
                  .selectAll("text")
-                 .data(obj.recommend)
+                 .data(json.questions)
                  .enter()
                  .append("text")
                  .attr("class", "textBox")
                  .attr("border-radius", "10px")
                  .attr("border","2px solid #73AD21")
-                 .attr("width", function () {
-                     return this.getComputedTextLength() + "px";
+                 .attr("width", function (x) {
+                     return x.questionTitle.getComputedTextLength + "px";
                  })
                  .attr("height", "25px")
                  .attr("text-overflow", "inherit")
-                 .attr("overflow","hidden");
+                 .attr("overflow","hidden")
+                 .text(function (x) {
+                     // alert(x.questionTitle); not working
+                     // alert(x["questionTitle"]); still not working
+                     // alert(x["questionTitle"]);
+                     alert(x.questionTitle);
+                     x['questionTitle'];
+                 });
 
-             $('div .chip').ready(function(){
-                 $('div .chip').jqFloat();
+             $(document).ready(function(){
+                 $('.textBox').jqFloat();
              });
 
              var force = d3.forceSimulation()
@@ -98,14 +114,21 @@ d3.json("/graph.json", function(error, json) {
                  .force("charge", d3.forceManyBody())
                  .force("center", d3.forceCenter(width/2, height/2));
 
-             force.nodes(obj.recommend).on({
-                 click: function () {
-                     function openPage() {
-                         $.get("/openPage/"+$(this).val()+"/").done();
-                     }
-                 },
-                 tick: ticked
-                 });
+             // force.nodes(recommend).on({
+             //     click: function () {
+             //         function openPage() {
+             //             $.get("/openPage/"+$(this).val()+"/").done();
+             //         }
+             //     },
+             //     tick: ticked
+             //     });
+             force.nodes(recommend)
+                 .on("tick", ticked);
+                 // .on("click", function () {
+                 //     function openPage() {
+                 //         $.get("/open")
+                 //     }
+                 // })
          });
     });
 
