@@ -90,14 +90,15 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
     display:none;
 }
 
-#paging li{
-  display: inline-block;
+#paging li {
+    display: inline-block;
+}
 
-#graph{
+#graphBox{
     display: none;
     border: 1px solid #DBDBDB;
     border-radius: 5px;
-    height: 60px;
+    /*height: 60px;*/
 }
 
 #innerGraph{
@@ -125,11 +126,24 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
     z-index:10;
 }
 
-g .link {
-    stroke: #ccc;
+.textBox {
+    border-radius: 10px;
+    border: 2px solid #73AD21;
+    margin-top: 100px;
+    width: 200px;
+    height: 25px;
+    text-overflow: inherit;
+    overflow: hidden;
 }
 
-.node text {
-    pointer-events: none;
-    font: 10px sans-serif;
-}
+/*.node {*/
+    /*cursor: pointer;*/
+    /*stroke: #3182bd;*/
+    /*stroke-width: 1.5px;*/
+/*}*/
+
+/*.link {*/
+    /*fill: none;*/
+    /*stroke: #9ecae1;*/
+    /*stroke-width: 1.5px;*/
+/*}*/
