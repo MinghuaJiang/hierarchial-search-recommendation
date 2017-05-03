@@ -178,13 +178,15 @@ public class QuestionRepositoryImpl implements QuestionSearch {
 
         Pageable pageRequest = new PageRequest(0, topCount);
         Criteria criteria = Criteria.where("tagName_ss").expression(tagName);
-        SimpleQuery query = new SimpleQuery(criteria, pageRequest);
+        SimpleQuery query = new SimpleQuery(criteria, pageRequest).addProjectionOnFields("title_t",
+                "answers_l", "view_l", "vote_l", "favorite_l", "tagName_ss","creation_dt","modification_dt");
         Page results = template.queryForPage(query, Question.class);
         List<Question> questions = results.getContent();
         questions.forEach((x) -> queue.offer(x));
         while (results.hasNext() && pageRequest.getPageNumber() <= 10) {
             pageRequest = pageRequest.next();
-            query = new SimpleQuery(criteria, pageRequest);
+            query = new SimpleQuery(criteria, pageRequest).addProjectionOnFields("title_t",
+                    "answers_l", "view_l", "vote_l", "favorite_l", "tagName_ss","creation_dt","modification_dt");
             results = template.queryForPage(query, Question.class);
             questions = results.getContent();
             for (Question question : questions) {
