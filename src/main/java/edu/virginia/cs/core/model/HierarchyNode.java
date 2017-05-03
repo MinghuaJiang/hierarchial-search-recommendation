@@ -1,4 +1,4 @@
-package edu.virginia.cs.core.algorithm;
+package edu.virginia.cs.core.model;
 
 import edu.virginia.cs.solr.model.Tag;
 

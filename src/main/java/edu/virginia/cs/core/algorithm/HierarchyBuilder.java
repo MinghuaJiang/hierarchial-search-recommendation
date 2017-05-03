@@ -1,14 +1,17 @@
 package edu.virginia.cs.core.algorithm;
 
+import edu.virginia.cs.core.model.Hierarchy;
+import edu.virginia.cs.core.model.HierarchyNode;
+import edu.virginia.cs.solr.model.Question;
 import edu.virginia.cs.solr.model.Tag;
 import edu.virginia.cs.solr.model.Topic;
 import edu.virginia.cs.solr.repository.QuestionRepository;
 import edu.virginia.cs.solr.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 
 import java.io.*;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by cutehuazai on 5/3/17.
@@ -18,7 +21,7 @@ public class HierarchyBuilder {
     private TagRepository tagRepository;
 
     @Autowired
-    private QuestionRepository repository;
+    private QuestionRepository questionRepository;
 
     private Hierarchy hierarchy;
     private String outputFile;
@@ -41,7 +44,7 @@ public class HierarchyBuilder {
                 }
             }
         }
-        List<Topic> topics = generateTopKTopics();
+        List<Topic> topics = generateTopKTopics(100);
         TreeSet<Tag> tags = tagRepository.getRankingTags(topics);
 
         Tag top = tags.pollFirst();
@@ -78,8 +81,57 @@ public class HierarchyBuilder {
         }
     }
 
-    private List<Topic> generateTopKTopics(){
-        return null;
+    private List<Topic> generateTopKTopics(int k){
+        List<Topic> result = new ArrayList<Topic>();
+        Page<Question> questions = questionRepository.getAllQuestions(0);
+        Queue<Topic> queue = new PriorityQueue<Topic>(k, new Comparator<Topic>() {
+            @Override
+            public int compare(Topic t1, Topic t2) {
+                return (int)(t1.getDocumentFrequency() - t2.getDocumentFrequency());
+            }
+        });
+        Set<Topic> topics = new HashSet<Topic>();
+        for(Question question : questions){
+            Topic topic = question.getTopic();
+            if(topics.contains(topic)){
+                continue;
+            }
+            topics.add(topic);
+            if(queue.size() < k){
+                queue.offer(topic);
+            }else{
+                if(topic.getDocumentFrequency() < queue.peek().getDocumentFrequency()){
+                    continue;
+                }
+                queue.poll();
+                queue.offer(topic);
+            }
+        }
+        while (questions.hasNext()){
+            int page = questions.nextPageable().getPageNumber();
+            questions = questionRepository.getAllQuestions(page);
+            for(Question question : questions){
+                Topic topic = question.getTopic();
+                if(topics.contains(topic)){
+                    continue;
+                }
+                topics.add(topic);
+                if(queue.size() < k){
+                    queue.offer(topic);
+                }else{
+                    if(topic.getDocumentFrequency() < queue.peek().getDocumentFrequency()){
+                        continue;
+                    }
+                    queue.poll();
+                    queue.offer(topic);
+                }
+            }
+
+        }
+        while (!queue.isEmpty()) {
+            result.add(queue.poll());
+        }
+        return result;
     }
 
     public Hierarchy getHierarchy(){

@@ -3,7 +3,7 @@ package edu.virginia.cs.solr.repository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.virginia.cs.core.algorithm.HierarchyBuilder;
-import edu.virginia.cs.core.algorithm.HierarchyNode;
+import edu.virginia.cs.core.model.HierarchyNode;
 import edu.virginia.cs.solr.model.Question;
 import edu.virginia.cs.solr.model.QuestionResult;
 import edu.virginia.cs.solr.model.Tag;
