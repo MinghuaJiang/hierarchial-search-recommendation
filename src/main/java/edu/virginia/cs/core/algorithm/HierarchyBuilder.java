@@ -7,7 +7,6 @@ import edu.virginia.cs.solr.model.Tag;
 import edu.virginia.cs.solr.model.Topic;
 import edu.virginia.cs.solr.repository.QuestionRepository;
 import edu.virginia.cs.solr.repository.TagRepository;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 

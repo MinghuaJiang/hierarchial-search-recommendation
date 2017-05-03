@@ -32,14 +32,14 @@ public class SearchController {
     }
 
 
-    @RequestMapping(value="/recommend/{tag}/{count}")
+    @RequestMapping(value="/recommendation/question/{tag}/{count}")
     public String recommendTopQuestionByTagName(@PathVariable("tag") String tag, @PathVariable("count")int count) throws Exception{
         List<Question> result = repository.recommendQuestionsByTag(tag, count);
         Gson gson = new GsonBuilder().create();
         return gson.toJson(result);
     }
 
-    @RequestMapping(value="/recommend/{term}/{count}")
+    @RequestMapping(value="/recommendation/tag/{term}/{count}")
     public String recommendTags(@PathVariable("term") String term, @PathVariable("count")int count) throws Exception{
         String result = repository.recommendNode(term, count);
         Gson gson = new GsonBuilder().create();
