@@ -26,7 +26,7 @@ public interface QuestionSearch {
 
     public int getTotalTermFrequency(String tagName) throws IOException, SolrServerException;
 
-    public String recommendNode(String searchTerm, int nodeCount) throws Exception;
+    public Map<String,Object> recommendNode(String searchTerm, int nodeCount) throws Exception;
 
     public Map<String, Double> getTermFrequency(String tagName, int count) throws IOException, SolrServerException;
 }

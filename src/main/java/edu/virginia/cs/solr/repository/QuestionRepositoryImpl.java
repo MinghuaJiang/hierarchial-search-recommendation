@@ -17,6 +17,7 @@ import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 import org.springframework.data.solr.core.query.Criteria;
 import org.springframework.data.solr.core.query.SimpleQuery;
+import org.springframework.data.solr.core.query.result.TermsPage;
 
 import java.io.IOException;
 import java.util.*;
@@ -49,7 +50,7 @@ public class QuestionRepositoryImpl implements QuestionSearch {
             List<String> tags = question.getTags();
             String topic = null;
             double maxTF = 0.0;
-            String tagName = tags.get((int)(Math.random() * tags.size()));
+            String tagName = tags.get((int) (Math.random() * tags.size()));
             /*for(String tag: tags){
                 double tf = getTermFrequency(tag, count).get("");
                 if(tf > maxTF){
@@ -84,8 +85,7 @@ public class QuestionRepositoryImpl implements QuestionSearch {
         query.set("fl", key);
         query.setRows(1);
         query.setStart(count);
-        QueryResponse resp = template.getSolrClient().
-                query(Question.class.getAnnotation(SolrDocument.class).solrCoreName(), query);
+        QueryResponse resp = template.getSolrClient().query(Question.class.getAnnotation(SolrDocument.class).solrCoreName(), query);
         Map<String, Double> result = new HashMap<>();
         result.put("tf", Double.valueOf(resp.getResults().get(0).getFieldValue(key).toString()));
         return result;
@@ -105,7 +105,7 @@ public class QuestionRepositoryImpl implements QuestionSearch {
     }
 
     @Override
-    public String recommendNode(String searchTerm, int nodeCount) throws Exception {
+    public Map<String, Object> recommendNode(String searchTerm, int nodeCount) throws Exception {
         Pageable pageRequest = new PageRequest(0, 20);
         SolrQuery query = new SolrQuery();
         query.set("q", searchTerm);
@@ -119,20 +119,64 @@ public class QuestionRepositoryImpl implements QuestionSearch {
         query.setRows(pageRequest.getPageSize());
         QueryResponse resp = template.getSolrClient().
                 query(Question.class.getAnnotation(SolrDocument.class).solrCoreName(), query);
-        List<Question> results = template.convertQueryResponseToBeans(resp, Question.class);
+        List<Question> results = template.convertQueryResponseToBeans(new QueryResponse(), Question.class);
         Set<Tag> set = new HashSet();
-        results.forEach((x) ->{
-            for(String tag: x.getTags()){
+        results.forEach((x) -> {
+            for (String tag : x.getTags()) {
                 set.add(repository.getTagByName(tag));
             }
         });
         HierarchyNode central = calculateCentralTag(set);
-        String cluster = getNodeCluster(central, nodeCount);
+        Map<String, Object> cluster = getNodeCluster(central, nodeCount);
         return cluster;
     }
 
-    private String getNodeCluster(HierarchyNode central, int count) {
-        return "";
+    private Map<String, Object> getNodeCluster(HierarchyNode central, int count) {
+        List<Map<String, Integer>> result = new ArrayList<Map<String, Integer>>();
+        HierarchyNode current = central;
+        Map<String, Integer> nodes = new HashMap<String, Integer>();
+        Map<String, Object> finalResult = new HashMap<String, Object>();
+        int index = 0;
+        while (current.getParentNode() != null) {
+            Map<String, Integer> each = new HashMap<>();
+            nodes.put(current.getName(), index++);
+            each.put("src", nodes.get(current.getName()));
+            current = current.getParentNode();
+            nodes.put(current.getName(), index++);
+            each.put("target", nodes.get(current.getName()));
+            result.add(each);
+            if (nodes.size() >= count) {
+                finalResult.put("links", result);
+                finalResult.put("nodes", nodes);
+                return finalResult;
+            }
+        }
+
+        Queue<HierarchyNode> queue = new LinkedList<HierarchyNode>();
+        queue.offer(central);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                HierarchyNode node = queue.poll();
+                for (HierarchyNode child : node.getChildren()) {
+                    nodes.put(child.getName(), index++);
+
+                    Map<String, Integer> each = new HashMap<String, Integer>();
+                    each.put("src", nodes.get(node.getName()));
+                    each.put("target", nodes.get(child.getName()));
+                    result.add(each);
+                    queue.offer(child);
+                    if (nodes.size() >= count) {
+                        finalResult.put("links", result);
+                        finalResult.put("nodes", nodes);
+                        return finalResult;
+                    }
+                }
+            }
+        }
+        finalResult.put("links", result);
+        finalResult.put("nodes", nodes);
+        return finalResult;
     }
 
     private HierarchyNode calculateCentralTag(Set<Tag> tags) {
@@ -152,7 +196,6 @@ public class QuestionRepositoryImpl implements QuestionSearch {
                 min = Math.abs(node.getScore() - avgScore);
             }
         }
-
         return result;
     }
 
@@ -179,14 +222,14 @@ public class QuestionRepositoryImpl implements QuestionSearch {
         Pageable pageRequest = new PageRequest(0, topCount);
         Criteria criteria = Criteria.where("tagName_ss").expression(tagName);
         SimpleQuery query = new SimpleQuery(criteria, pageRequest).addProjectionOnFields("title_t",
-                "answers_l", "view_l", "vote_l", "favorite_l", "tagName_ss","creation_dt","modification_dt");
+                "answers_l", "view_l", "vote_l", "favorite_l", "creation_dt", "modification_dt");
         Page results = template.queryForPage(query, Question.class);
         List<Question> questions = results.getContent();
         questions.forEach((x) -> queue.offer(x));
         while (results.hasNext() && pageRequest.getPageNumber() <= 10) {
             pageRequest = pageRequest.next();
             query = new SimpleQuery(criteria, pageRequest).addProjectionOnFields("title_t",
-                    "answers_l", "view_l", "vote_l", "favorite_l", "tagName_ss","creation_dt","modification_dt");
+                    "answers_l", "view_l", "vote_l", "favorite_l", "creation_dt", "modification_dt");
             results = template.queryForPage(query, Question.class);
             questions = results.getContent();
             for (Question question : questions) {
@@ -232,5 +275,13 @@ public class QuestionRepositoryImpl implements QuestionSearch {
         QuestionResult result = new QuestionResult(questions.getTotalElements(), questions.getTotalPages(),
                 questions.getContent());
         return result;
+    }
+
+    public void setFactory(HierarchyBuilder factory) {
+        this.factory = factory;
+    }
+
+    public void setRepository(TagRepository repository) {
+        this.repository = repository;
     }
 }

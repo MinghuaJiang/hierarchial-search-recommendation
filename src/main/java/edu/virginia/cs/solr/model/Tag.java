@@ -127,4 +127,5 @@ public class Tag {
     public int hashCode() {
         return tagName != null ? tagName.hashCode() : 0;
     }
+
 }
