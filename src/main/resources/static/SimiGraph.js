@@ -21,6 +21,7 @@ var link = svg.append("g")
     .selectAll("line");
 
 var node = svg.append("g")
+    .attr("class", "nodes")
     .selectAll(".node");
 
 var drag = d3.drag()
@@ -40,7 +41,7 @@ d3.json("/graph.json", function(error, json) {
 
     node = node.data(json.nodes)
         .enter().append("g")
-        .attr("class", "node")
+        .attr("class","node")
         .call(drag);
 
     node.append("circle")
