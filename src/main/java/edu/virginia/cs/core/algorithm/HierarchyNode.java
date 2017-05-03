@@ -1,5 +1,7 @@
 package edu.virginia.cs.core.algorithm;
 
+import edu.virginia.cs.solr.model.Tag;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +9,7 @@ import java.util.List;
  * Created by VINCENTWEN on 5/1/17.
  */
 public class HierarchyNode {
-    private ScoredTag node;
+    private Tag node;
     private int level;
     private HierarchyNode parentNode;
     private List<HierarchyNode> children;
@@ -17,7 +19,7 @@ public class HierarchyNode {
         this(null);
     };
 
-    public HierarchyNode(ScoredTag node) {
+    public HierarchyNode(Tag node) {
         this.node = node;
         this.parentNode = new HierarchyNode();
         this.children = new ArrayList<>();
@@ -62,5 +64,9 @@ public class HierarchyNode {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public double getScore(){
+        return this.node.getScore();
     }
 }

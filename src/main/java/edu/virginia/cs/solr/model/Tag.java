@@ -6,11 +6,12 @@ import org.springframework.data.solr.core.mapping.SolrDocument;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 /**
  * Created by cutehuazai on 5/1/17.
  */
-@XmlRootElement(name="row")
+@XmlRootElement(name = "row")
 @SolrDocument(solrCoreName = "tags")
 public class Tag {
     @Id
@@ -22,7 +23,10 @@ public class Tag {
     private long tagDistinctCount;
     @Indexed(name = "wikiId_s")
     private String wikiId;
-    @XmlAttribute(name="Id")
+    private long tagRawCount;
+    private double score;
+
+    @XmlAttribute(name = "Id")
     public String getId() {
         return id;
     }
@@ -30,7 +34,8 @@ public class Tag {
     public void setId(String id) {
         this.id = id;
     }
-    @XmlAttribute(name="TagName")
+
+    @XmlAttribute(name = "TagName")
     public String getTagName() {
         return tagName;
     }
@@ -38,7 +43,8 @@ public class Tag {
     public void setTagName(String tagName) {
         this.tagName = tagName;
     }
-    @XmlAttribute(name="Count")
+
+    @XmlAttribute(name = "Count")
     public long getTagDistinctCount() {
         return tagDistinctCount;
     }
@@ -47,7 +53,7 @@ public class Tag {
         this.tagDistinctCount = tagDistinctCount;
     }
 
-    @XmlAttribute(name="WikiPostId")
+    @XmlAttribute(name = "WikiPostId")
     public String getWikiId() {
         return wikiId;
     }
@@ -56,13 +62,69 @@ public class Tag {
         this.wikiId = wikiId;
     }
 
+    public double getScore() {
+        return score;
+    }
+
+    public void calculateITScore(List<Topic> topics, List<Tag> tags) {
+        double[] topic_pro_arr = getTopKTopicProbArr(topics, tags);
+        this.score = (tagDistinctCount * Math.log(tagRawCount + 1)) * this.getTagEntropy(topic_pro_arr);
+    }
+
+    public void normalizeScore(double maxScore) {
+        this.score = this.score / maxScore;
+    }
+
+    private double[] getTopKTopicProbArr(List<Topic> topics, List<Tag> tags) {
+        double[] topicProb = new double[topics.size()];
+
+        Topic[] topKTopicsArr = topics.toArray(new Topic[0]);
+        for (int i = 0; i < topics.size(); i++) {
+            topicProb[i] = this.co_occurrence(topKTopicsArr[i]) / tags.size();
+        }
+        return topicProb;
+    }
+
+    public long co_occurrence(Topic topic) {
+        return 1;
+    }
+
+    private double getTagEntropy(double[] topic_pro_arr) {
+        double entropy = 0;
+        for (int i = 0; i < topic_pro_arr.length;i++){
+            entropy += topic_pro_arr[i] * Math.log(topic_pro_arr[i]);
+        }
+        return entropy;
+    }
+
     @Override
     public String toString() {
         return "Tag{" +
                 "id='" + id + '\'' +
                 ", tagName='" + tagName + '\'' +
-                ", tagDistinctCount='" + tagDistinctCount + '\'' +
+                ", tagDistinctCount=" + tagDistinctCount +
                 ", wikiId='" + wikiId + '\'' +
+                ", tagRawCount=" + tagRawCount +
                 '}';
+    }
+
+    public void setTagRawCount(long tagRawCount) {
+        this.tagRawCount = tagRawCount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tag tag = (Tag) o;
+
+        return tagName != null ? tagName.equals(tag.tagName) : tag.tagName == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return tagName != null ? tagName.hashCode() : 0;
     }
 }

@@ -1,8 +1,10 @@
 package edu.virginia.cs.solr.repository;
 
 import edu.virginia.cs.solr.model.Tag;
+import edu.virginia.cs.solr.model.Topic;
 
 import java.util.List;
+import java.util.TreeSet;
 
 
 /**
@@ -10,4 +12,5 @@ import java.util.List;
  */
 public interface TagSearch {
     public List<Tag> getAllTags();
+    public TreeSet<Tag> getRankingTags(List<Topic> topK);
 }

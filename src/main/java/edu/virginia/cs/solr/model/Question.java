@@ -5,9 +5,12 @@ import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by cutehuazai on 5/1/17.
@@ -58,6 +61,8 @@ public class Question {
     @XmlAttribute(name="LastActivityDate")
     @Indexed(name="modification_dt")
     private String lastModifiedDate;
+
+    private Topic topic;
 
     public String getId() {
         return id;
@@ -147,6 +152,14 @@ public class Question {
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    public Topic getTopic() {
+        return topic;
+    }
+
+    public void setTopic(Topic topic) {
+        this.topic = topic;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
@@ -162,5 +175,17 @@ public class Question {
                 ", creationDate=" + creationDate +
                 ", lastModifiedDate=" + lastModifiedDate +
                 '}';
+    }
+
+
+
+    public double getScore() throws Exception {
+        SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US);
+        Date date = new Date();
+        long creationDiffInSecond = (date.getTime() - format.parse(this.creationDate).getTime())/1000;
+        long modificationDiffInSecond = (date.getTime() - format.parse(this.lastModifiedDate).getTime())/1000;
+        double count = Math.log10(viewCount)  * 4 + vote * answerCount / 5;
+        double age = Math.pow((creationDiffInSecond / 2 + modificationDiffInSecond / 2 + 1), 1.5);
+        return count / age;
     }
 }
