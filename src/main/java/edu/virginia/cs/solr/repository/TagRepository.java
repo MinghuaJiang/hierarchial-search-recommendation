@@ -1,6 +1,5 @@
 package edu.virginia.cs.solr.repository;
 
-import edu.virginia.cs.search.api.TagSearch;
 import edu.virginia.cs.solr.model.Tag;
 import org.springframework.data.solr.repository.SolrCrudRepository;
 

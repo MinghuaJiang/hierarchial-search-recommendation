@@ -15,8 +15,12 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,10 +53,16 @@ public class StreamBasedXMLParser {
                             if (attr != null) {
                                 ReflectionUtils.makeAccessible(field);
                                 if (field.getType() == String.class) {
-                                    ReflectionUtils.setField(field, question, attr.getValue());
+                                    try{
+                                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+                                        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                        ReflectionUtils.setField(field, question, outputFormat.format(format.parse(attr.getValue())));
+                                    }catch (Exception e){
+                                        ReflectionUtils.setField(field, question, attr.getValue());
+                                    }
                                 } else if (field.getType() == List.class) {
                                     ReflectionUtils.setField(field, question, Arrays.asList(attr.getValue().split("><")).stream().map(x -> x.replace("<", "").replace(">", "")).collect(Collectors.toList()));
-                                } else {
+                                }  else {
                                     ReflectionUtils.setField(field, question, Long.valueOf(attr.getValue()));
                                 }
                             }
@@ -60,7 +70,7 @@ public class StreamBasedXMLParser {
                         if(question.getPostTypeId().equals("1")){
                             result.add(question);
                         }
-                        if(result.size() == 10000){
+                        if(result.size() == 20000){
                             indexService.buildQuestionIndex(result);
                             result = new ArrayList<Question>();
                         }

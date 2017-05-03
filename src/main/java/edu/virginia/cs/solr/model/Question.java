@@ -5,6 +5,8 @@ import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import java.time.temporal.TemporalAccessor;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,9 +39,9 @@ public class Question {
     @Indexed(name = "answers_l")
     private long answerCount;
 
-    @XmlAttribute(name="AnswerCount")
-    @Indexed(name = "score_l")
-    private long score;
+    @XmlAttribute(name="Score")
+    @Indexed(name = "vote_l")
+    private long vote;
 
     @XmlAttribute(name="ViewCount")
     @Indexed(name = "view_l")
@@ -48,6 +50,14 @@ public class Question {
     @XmlAttribute(name="FavoriteCount")
     @Indexed(name = "favorite_l")
     private long favoriteCount;
+
+    @XmlAttribute(name="CreationDate")
+    @Indexed(name = "creation_dt")
+    private String creationDate;
+
+    @XmlAttribute(name="LastActivityDate")
+    @Indexed(name="modification_dt")
+    private String lastModifiedDate;
 
     public String getId() {
         return id;
@@ -73,8 +83,8 @@ public class Question {
         return answerCount;
     }
 
-    public long getScore() {
-        return score;
+    public long getVote() {
+        return vote;
     }
 
     public long getViewCount() {
@@ -109,8 +119,8 @@ public class Question {
         this.answerCount = answerCount;
     }
 
-    public void setScore(long score) {
-        this.score = score;
+    public void setVote(long vote) {
+        this.vote = vote;
     }
 
     public void setViewCount(long viewCount) {
@@ -119,6 +129,22 @@ public class Question {
 
     public void setFavoriteCount(long favoriteCount) {
         this.favoriteCount = favoriteCount;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     @Override
@@ -130,9 +156,11 @@ public class Question {
                 ", questionBody='" + questionBody + '\'' +
                 ", postTypeId='" + postTypeId + '\'' +
                 ", answerCount=" + answerCount +
-                ", score=" + score +
+                ", vote=" + vote +
                 ", viewCount=" + viewCount +
                 ", favoriteCount=" + favoriteCount +
+                ", creationDate=" + creationDate +
+                ", lastModifiedDate=" + lastModifiedDate +
                 '}';
     }
 }

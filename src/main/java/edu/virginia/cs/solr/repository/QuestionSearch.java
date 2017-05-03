@@ -1,21 +1,25 @@
 package edu.virginia.cs.solr.repository;
 
 import edu.virginia.cs.solr.model.Question;
+import edu.virginia.cs.solr.model.QuestionResult;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.springframework.data.solr.core.query.result.Cursor;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
  * Created by cutehuazai on 4/29/17.
  */
 public interface QuestionSearch {
-    public List<Question> getQuestionsByTag(String tagName, int pageNum);
+    public List<Question> recommendQuestionsByTag(String tagName, int topCount) throws Exception;
 
-    public List<Question> searchQuestionsBySearchTerm(String searchTerm, int pageNum);
+    public QuestionResult searchQuestionsBySearchTerm(String searchTerm, int pageNum) throws Exception;
 
-    public String searchQuestions(String searchTerm, int pageNum);
+    public Cursor<Question> getAllQuestions();
 
-    public long getMatchCount(String searchTerm);
+    public long[] getQuestionsByTagDifference(String tag1, String tag2);
 
-    public long getMatchCountOfTwoTags(String tag1, String tag2);
+    public int getTotalTermFrequency(String tagName) throws IOException, SolrServerException;
 }
 
