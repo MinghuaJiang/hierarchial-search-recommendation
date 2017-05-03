@@ -2,6 +2,8 @@
  * Created by VINCENTWEN on 4/29/17.
  */
 
+// D3 labeled forced layout
+
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
@@ -14,8 +16,12 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var link = svg.append("g")
     .attr("class", "link")
-    .attr("stroke","#ccc")
+    .attr("stroke","#9ecae1")
+    .attr("stroke-width","1.5px")
     .selectAll("line");
+
+var node = svg.append("g")
+    .selectAll(".node");
 
 var drag = d3.drag()
     .on("start", dragstarted)
@@ -32,8 +38,7 @@ d3.json("/graph.json", function(error, json) {
 
     link = link.data(json.links).enter().append("line");
 
-    var node = svg.selectAll(".node")
-        .data(json.nodes)
+    node = node.data(json.nodes)
         .enter().append("g")
         .attr("class", "node")
         .call(drag);
@@ -41,6 +46,67 @@ d3.json("/graph.json", function(error, json) {
     node.append("circle")
         .attr("r", 10)
         .attr("fill", function(d) { return color(d.group); });
+    
+    node.on("click", function (d) {
+         var count = 8;
+         $.get("/recommendation/"+ d.name +"/" + count).done(function (obj) {
+             $('node').hide("slow");
+             $('link').hide("slow");
+
+             var recommendWindow = d3.select("svg")
+                 .selectAll("g")
+                 .data(obj)
+                 .enter()
+                 .append("g")
+                 .attr("class", "recommendPage");
+
+             var tag = recommendWindow
+                 .append("circle")
+                 .attr("r", 15)
+                 .attr("fill", "#ffccff");
+
+             var tagName = recommendWindow
+                 .append("text")
+                 .attr("dx", -15)
+                 .attr("dy", ".35em")
+                 .text(function (obj) {
+                     return obj.name;
+                 });
+
+             var recommend = recommendWindow
+                 .selectAll("text")
+                 .data(obj.recommend)
+                 .enter()
+                 .append("text")
+                 .attr("class", "textBox")
+                 .attr("border-radius", "10px")
+                 .attr("border","2px solid #73AD21")
+                 .attr("width", function () {
+                     return this.getComputedTextLength() + "px";
+                 })
+                 .attr("height", "25px")
+                 .attr("text-overflow", "inherit")
+                 .attr("overflow","hidden");
+
+             $('div .chip').ready(function(){
+                 $('div .chip').jqFloat();
+             });
+
+             var force = d3.forceSimulation()
+                 .force("link", d3.forceLink())
+                 .force("charge", d3.forceManyBody())
+                 .force("center", d3.forceCenter(width/2, height/2));
+
+             force.nodes(obj.recommend).on({
+                 click: function () {
+                     function openPage() {
+                         $.get("/openPage/"+$(this).val()+"/").done();
+                     }
+                 },
+                 tick: ticked
+                 });
+         });
+    });
 
     // use same image on each node
     // node.append("image")
@@ -53,6 +119,7 @@ d3.json("/graph.json", function(error, json) {
     node.append("text")
         .attr("dx", 20)
         .attr("dy", ".35em")
+        .attr("font", "10px sans-serif")
         .text(function(d) { return d.name });
 
     simulation.nodes(json.nodes)
@@ -98,14 +165,10 @@ function dragended(d) {
 var innerGraph = $("#innerGraph");
 console.log(innerGraph.width);
 
-//optionBarVisible = true;
-//$("#options #hide_options").on("click", function () {
-  //  if (optionBarVisible) {
-    //    $("#options").hide();
-      //  $("#options #hide_options").html("(show graph options)");
-    //} else {
-      //  $("#options").show();
-        //$("#options #hide_options").html("(hide)");
-    //}
-    //optionBarVisible = !optionBarVisible;
-//});
+$('goBack').click(function () {
+    $('recommenPage').remove();
+    $('node').show("fast");
+    $('link').show("fast");
+});
+
+
