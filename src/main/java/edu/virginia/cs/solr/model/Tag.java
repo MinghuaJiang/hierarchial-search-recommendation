@@ -6,6 +6,7 @@ import org.springframework.data.solr.core.mapping.SolrDocument;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  */
 @XmlRootElement(name = "row")
 @SolrDocument(solrCoreName = "tags")
-public class Tag {
+public class Tag implements Serializable {
     @Id
     @Indexed(name = "id")
     private String id;

@@ -2,13 +2,14 @@ package edu.virginia.cs.core.model;
 
 import edu.virginia.cs.solr.model.Tag;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by VINCENTWEN on 5/1/17.
  */
-public class HierarchyNode {
+public class HierarchyNode implements Serializable {
     private Tag node;
     private int level;
     private HierarchyNode parentNode;
