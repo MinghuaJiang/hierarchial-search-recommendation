@@ -54,9 +54,9 @@ d3.json("/graph.json", function(error, json) {
              node.style("opacity", 0);
              link.style("opacity", 0);
              // console.log(d);
-             // console.log(obj);
+             console.log(obj);
              // console.log(this);
-             var json = JSON.parse(obj);
+             // var json = JSON.parse(obj);
              console.log("#" + json.questions);
              console.log("&" + json["questions"]);
              console.log("*" + json['questions'])
@@ -87,15 +87,16 @@ d3.json("/graph.json", function(error, json) {
 
              var recommend = recommendWindow
                  .selectAll("text")
-                 .data(json)
+                 .data(obj)
                  .enter()
                  .append("text")
                  .attr("class", "textBox")
                  .attr("border-radius", "10px")
                  .attr("border","2px solid #73AD21")
-                 .attr("width", function (x) {
-                     return x.questionTitle.getComputedTextLength + "px";
-                 })
+                 // .attr("width", function (x) {
+                 //     return x.questionTitle.getComputedTextLength;
+                 // })
+                 .attr("width", "100px")
                  .attr("height", "25px")
                  .attr("text-overflow", "inherit")
                  .attr("overflow","hidden")
