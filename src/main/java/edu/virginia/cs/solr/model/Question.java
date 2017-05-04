@@ -5,9 +5,7 @@ import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 import javax.xml.bind.annotation.XmlAttribute;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;

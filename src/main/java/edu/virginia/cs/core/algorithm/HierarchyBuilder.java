@@ -203,12 +203,14 @@ public class HierarchyBuilder {
                 return (int) (t1.getDocumentFrequency() - t2.getDocumentFrequency());
             }
         });
+        int count = 0;
         Set<Topic> topics = new HashSet<Topic>();
         for (Question question : questions) {
             Topic topic = question.getTopic();
             if (topics.contains(topic)) {
                 continue;
             }
+            count++;
             topics.add(topic);
             if (queue.size() < k) {
                 queue.offer(topic);
@@ -224,6 +226,7 @@ public class HierarchyBuilder {
             int page = questions.nextPageable().getPageNumber();
             questions = questionRepository.getAllQuestions(page);
             for (Question question : questions) {
+                count++;
                 Topic topic = question.getTopic();
                 if (topics.contains(topic)) {
                     continue;
@@ -239,7 +242,9 @@ public class HierarchyBuilder {
                     queue.offer(topic);
                 }
             }
-
+            if(count % 10000 == 0){
+                System.out.println(count + " question passed");
+            }
         }
         while (!queue.isEmpty()) {
             result.add(queue.poll());
