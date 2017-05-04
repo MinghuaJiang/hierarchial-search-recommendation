@@ -5,6 +5,7 @@ import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Locale;
  * Created by cutehuazai on 5/1/17.
  */
 @SolrDocument(solrCoreName = "posts")
-public class Question {
+public class Question implements Serializable {
     @Id
     @Indexed(name = "id")
     @XmlAttribute(name="Id")

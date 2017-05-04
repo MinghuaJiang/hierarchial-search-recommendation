@@ -2,12 +2,13 @@ package edu.virginia.cs.core.model;
 
 import edu.virginia.cs.solr.repository.QuestionRepository;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Created by VINCENTWEN on 5/1/17.
  */
-public class Hierarchy {
+public class Hierarchy implements Serializable {
     private HierarchyNode root;
     private int totalNodes;
     private int depth;

@@ -1,9 +1,11 @@
 package edu.virginia.cs.solr.model;
 
+import java.io.Serializable;
+
 /**
  * Created by cutehuazai on 5/3/17.
  */
-public class Topic {
+public class Topic implements Serializable {
     private String topicName;
     private long documentFrequency;
 
