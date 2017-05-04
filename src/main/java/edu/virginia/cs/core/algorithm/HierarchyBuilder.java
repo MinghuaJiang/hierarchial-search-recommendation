@@ -26,8 +26,8 @@ public class HierarchyBuilder {
     private Hierarchy hierarchy;
     private String hierarchyFile;
     private List<List<HierarchyNode>> buckets;
-    private double epsilon = 10;
-    private double radiusParamter = 100;
+    private double epsilon = 0.7;
+    private double radiusParameter = 10;
 
     public HierarchyBuilder(String hierarchyFile) {
         this.hierarchyFile = hierarchyFile;
@@ -164,7 +164,7 @@ public class HierarchyBuilder {
 
     private double getEdgeWeight(HierarchyNode n1, HierarchyNode n2) {
         long[] diff = questionRepository.getQuestionsByTagDifference(n1.getName(), n2.getName());
-        return Math.exp(-1 * (Math.pow(diff[0], 2) + Math.pow(diff[1], 2)) / Math.pow(radiusParamter,2));
+        return Math.exp(-1 * (Math.pow(diff[0], 2) + Math.pow(diff[1], 2)) / Math.pow(radiusParameter,2));
     }
 
     private HierarchyNode getCommonParent(HierarchyNode n1, HierarchyNode n2) {
