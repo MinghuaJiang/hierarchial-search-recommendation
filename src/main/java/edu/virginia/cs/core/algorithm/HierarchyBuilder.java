@@ -244,6 +244,15 @@ public class HierarchyBuilder {
             }
             if(count % 10000 == 0){
                 System.out.println(count + " question passed");
+                ObjectOutputStream oos = null;
+                try {
+                    oos = new ObjectOutputStream(new FileOutputStream("top_k_queue.dat"));
+                    oos.writeObject(queue);
+                } finally {
+                    if (oos != null) {
+                        oos.close();
+                    }
+                }
             }
         }
         while (!queue.isEmpty()) {
