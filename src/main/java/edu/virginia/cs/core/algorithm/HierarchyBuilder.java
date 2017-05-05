@@ -1,10 +1,13 @@
 package edu.virginia.cs.core.algorithm;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import edu.virginia.cs.core.model.Hierarchy;
 import edu.virginia.cs.core.model.HierarchyNode;
 import edu.virginia.cs.solr.model.Question;
 import edu.virginia.cs.solr.model.Tag;
 import edu.virginia.cs.solr.model.Topic;
+import edu.virginia.cs.solr.model.TopicComparator;
 import edu.virginia.cs.solr.repository.QuestionRepository;
 import edu.virginia.cs.solr.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +19,7 @@ import java.util.*;
 /**
  * Created by cutehuazai on 5/3/17.
  */
-public class HierarchyBuilder {
+public class HierarchyBuilder{
     @Autowired
     private TagRepository tagRepository;
 
@@ -197,20 +200,29 @@ public class HierarchyBuilder {
         }
 
         Page<Question> questions = questionRepository.getAllQuestions(0);
-        Queue<Topic> queue = new PriorityQueue<Topic>(k, new Comparator<Topic>() {
-            @Override
-            public int compare(Topic t1, Topic t2) {
-                return (int) (t1.getDocumentFrequency() - t2.getDocumentFrequency());
-            }
-        });
+        Queue<Topic> queue = new PriorityQueue<Topic>(k, new TopicComparator());
         int count = 0;
         Set<Topic> topics = new HashSet<Topic>();
         for (Question question : questions) {
+            if(count % 10000 == 0){
+                System.out.println(count + " question passed");
+                ObjectOutputStream oos = null;
+                try {
+                    oos = new ObjectOutputStream(new FileOutputStream("top_k_queue.dat"));
+                    oos.writeObject(queue);
+                } finally {
+                    if (oos != null) {
+                        oos.close();
+                    }
+                }
+            }
+            count++;
             Topic topic = question.getTopic();
             if (topics.contains(topic)) {
                 continue;
             }
-            count++;
+
+
             topics.add(topic);
             if (queue.size() < k) {
                 queue.offer(topic);
@@ -226,8 +238,21 @@ public class HierarchyBuilder {
             int page = questions.nextPageable().getPageNumber();
             questions = questionRepository.getAllQuestions(page);
             for (Question question : questions) {
-                count++;
+                if(count % 10000 == 0){
+                    System.out.println(count + " question passed");
+
+                    ObjectOutputStream oos = null;
+                    try {
+                        oos = new ObjectOutputStream(new FileOutputStream("top_k_queue.dat"));
+                        oos.writeObject(queue);
+                    } finally {
+                        if (oos != null) {
+                            oos.close();
+                        }
+                    }
+                }
                 Topic topic = question.getTopic();
+                count++;
                 if (topics.contains(topic)) {
                     continue;
                 }
@@ -240,18 +265,6 @@ public class HierarchyBuilder {
                     }
                     queue.poll();
                     queue.offer(topic);
-                }
-            }
-            if(count % 10000 == 0){
-                System.out.println(count + " question passed");
-                ObjectOutputStream oos = null;
-                try {
-                    oos = new ObjectOutputStream(new FileOutputStream("top_k_queue.dat"));
-                    oos.writeObject(queue);
-                } finally {
-                    if (oos != null) {
-                        oos.close();
-                    }
                 }
             }
         }

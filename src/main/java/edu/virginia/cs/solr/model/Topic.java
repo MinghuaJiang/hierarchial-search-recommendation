@@ -29,4 +29,28 @@ public class Topic implements Serializable {
     public void setDocumentFrequency(Long documentFrequency) {
         this.documentFrequency = documentFrequency;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Topic topic = (Topic) o;
+
+        return topicName != null ? topicName.equals(topic.topicName) : topic.topicName == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return topicName != null ? topicName.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Topic{" +
+                "topicName='" + topicName + '\'' +
+                ", documentFrequency=" + documentFrequency +
+                '}';
+    }
 }
