@@ -50,7 +50,8 @@ public class QuestionRepositoryImpl implements QuestionSearch {
             List<String> tags = question.getTags();
             String topic = null;
             double maxTF = 0.0;
-            String tagName = tags.get((int) (Math.random() * tags.size()));
+            int index = (int)(Math.random() * tags.size());
+            String tagName = tags.get(index);
             /*for(String tag: tags){
                 double tf = getTermFrequency(tag, count).get("");
                 if(tf > maxTF){
@@ -58,7 +59,7 @@ public class QuestionRepositoryImpl implements QuestionSearch {
                     topic = tag;
                 }
             }*/
-            count++;
+            //count++;
             QuestionResult result = this.getQuestionsByTagName(tagName, 0);
             question.setTopic(new Topic(tagName, result.getTotalCount()));
         }

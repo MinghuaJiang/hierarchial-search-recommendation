@@ -56,10 +56,10 @@ d3.json("/graph.json", function(error, json) {
              // console.log(d);
              console.log(obj);
              // console.log(this);
-             // var json = JSON.parse(obj);
+             var json = JSON.parse(obj);
              console.log("#" + json.questions);
              console.log("&" + json["questions"]);
-             console.log("*" + json['questions'])
+             console.log("*" + json['questions']);
 
              var recommendWindow = d3.select("svg")
                  .append("g")
@@ -85,9 +85,11 @@ d3.json("/graph.json", function(error, json) {
                      return d.name;
                  });
 
+             console.log("checking format:" + json);
+
              var recommend = recommendWindow
                  .selectAll("text")
-                 .data(obj)
+                 .data(json)
                  .enter()
                  .append("text")
                  .attr("class", "textBox")
@@ -98,18 +100,25 @@ d3.json("/graph.json", function(error, json) {
                  // })
                  .attr("width", "100px")
                  .attr("height", "25px")
+                 .attr("x", function () {
+                     return Math.random() * (width - 50);
+                 })
+                 .attr("y", function () {
+                     return Math.random() * (height - 50);
+                 })
                  .attr("text-overflow", "inherit")
                  .attr("overflow","hidden")
                  .text(function (x) {
                      // alert(x.questionTitle); not working
                      // alert(x["questionTitle"]); still not working
                      // alert(x.questionTitle); // work !!!!!
-                     x.questionTitle;
+                     console.log(x.questionTitle);
+                     return x["questionTitle"];
                  });
 
-             $(document).ready(function(){
-                 $('.textBox').jqFloat();
-             });
+             // $(document).ready(function(){
+             //     $('.textBox').jqFloat();
+             // });
 
              var force = d3.forceSimulation()
                  .force("link", d3.forceLink())
