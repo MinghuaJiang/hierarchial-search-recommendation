@@ -20,7 +20,6 @@ public class QuestionSearchTest {
 
     @Test
     public void testQuestionSearch() throws Exception {
-
-
+        System.out.println(repository.getQuestionsByTagName("java", 10));
     }
 }
