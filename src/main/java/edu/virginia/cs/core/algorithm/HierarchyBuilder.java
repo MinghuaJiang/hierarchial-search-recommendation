@@ -201,7 +201,7 @@ public class HierarchyBuilder{
 
         Page<Question> questions = questionRepository.getAllQuestions(0);
         Queue<Topic> queue = new PriorityQueue<Topic>(k, new TopicComparator());
-        int count = 0;
+        int count = 1;
         Set<Topic> topics = new HashSet<Topic>();
         for (Question question : questions) {
             if(count % 10000 == 0){
