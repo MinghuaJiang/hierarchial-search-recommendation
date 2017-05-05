@@ -20,7 +20,7 @@ public class QuestionSearchTest {
 
     @Test
     public void testQuestionSearch() throws Exception {
-       System.out.println(repository.getTermFrequency("java", 10));
+
 
     }
 }
