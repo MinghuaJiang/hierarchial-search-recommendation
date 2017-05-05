@@ -17,7 +17,6 @@ import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 import org.springframework.data.solr.core.query.Criteria;
 import org.springframework.data.solr.core.query.SimpleQuery;
-import org.springframework.data.solr.core.query.result.TermsPage;
 
 import java.io.IOException;
 import java.util.*;
@@ -245,6 +244,10 @@ public class QuestionRepositoryImpl implements QuestionSearch {
         while (!queue.isEmpty()) {
             result.add(0, queue.poll());
         }
+        for(int i = 0; i < result.size();i++){
+            result.get(i).setSearchScore(result.get(0).getScore() / result.get(i).getScore());
+        }
+
         return result;
     }
 

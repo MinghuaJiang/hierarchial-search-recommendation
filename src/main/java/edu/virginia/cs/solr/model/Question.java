@@ -63,6 +63,8 @@ public class Question implements Serializable {
 
     private Topic topic;
 
+    private double searchScore;
+
     public String getId() {
         return id;
     }
@@ -171,12 +173,20 @@ public class Question implements Serializable {
                 ", vote=" + vote +
                 ", viewCount=" + viewCount +
                 ", favoriteCount=" + favoriteCount +
-                ", creationDate=" + creationDate +
-                ", lastModifiedDate=" + lastModifiedDate +
+                ", creationDate='" + creationDate + '\'' +
+                ", lastModifiedDate='" + lastModifiedDate + '\'' +
+                ", topic=" + topic +
+                ", searchScore=" + searchScore +
                 '}';
     }
 
+    public double getSearchScore() {
+        return searchScore;
+    }
 
+    public void setSearchScore(double searchScore) {
+        this.searchScore = searchScore;
+    }
 
     public double getScore() throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US);
