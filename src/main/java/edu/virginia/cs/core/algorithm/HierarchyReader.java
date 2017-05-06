@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.virginia.cs.core.model.Hierarchy;
 import edu.virginia.cs.core.model.HierarchyNode;
+import org.apache.commons.collections.map.HashedMap;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
@@ -36,25 +37,29 @@ public class HierarchyReader {
     private static Map<String, Object> getNodeHierachy(HierarchyNode central, int count) {
         List<Map<String, Integer>> result = new ArrayList<Map<String, Integer>>();
         HierarchyNode current = central;
-        List<Map<String, Integer>> nodes = new ArrayList<Map<String, Integer>>();
+        Map<String, Integer> nodes = new HashMap<String, Integer>();
+        List<Map<String, Object>> nodes_result = new ArrayList<Map<String, Object>>();
         Map<String, Object> finalResult = new HashMap<String, Object>();
         int index = 0;
         while (current.getParentNode() != null) {
             Map<String, Integer> each = new HashMap<>();
-            Map<String, Integer> node = new HashMap<>();
-            node.put(current.getName(), index++);
-            nodes.add(node);
-            each.put("source", node.get(current.getName()));
+            nodes.put(current.getName(), index++);
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("name", current.getName());
+            map.put("group", current.getLevel());
+            nodes_result.add(map);
+            each.put("source", nodes.get(current.getName()));
             current = current.getParentNode();
-            node = new HashMap<>();
-            node.put(current.getName(), index++);
-            nodes.add(node);
-            node.put(current.getName(), index++);
-            each.put("target", node.get(current.getName()));
+            nodes.put(current.getName(), index++);
+            each.put("target", nodes.get(current.getName()));
             result.add(each);
+            map = new HashMap<String, Object>();
+            map.put("name", current.getName());
+            map.put("group", current.getLevel());
+            nodes_result.add(map);
             if (nodes.size() >= count) {
                 finalResult.put("links", result);
-                finalResult.put("nodes", nodes);
+                finalResult.put("nodes", nodes_result);
                 return finalResult;
             }
         }
@@ -65,23 +70,29 @@ public class HierarchyReader {
             int size = queue.size();
             for (int i = 0; i < size; i++) {
                 HierarchyNode node = queue.poll();
-               // if(!nodes.containsKey(node)){
-                Map<String, Integer> rootnode = new HashMap<>();
-                rootnode.put(node.getName(), index++);
-                nodes.add(rootnode);
+                if(!nodes.containsKey(node)){
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("name", node.getName());
+                    map.put("group", node.getLevel());
+                    nodes_result.add(map);
+                    nodes.put(node.getName(), index++);
+                }
                 for (HierarchyNode child : node.getChildren()) {
-                    Map<String,Integer> nodeeach = new HashMap<>();
-                    nodeeach.put(child.getName(), index++);
-                    nodes.add(nodeeach);
+                    nodes.put(child.getName(), index++);
+
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("name", child.getName());
+                    map.put("group", child.getLevel());
+                    nodes_result.add(map);
 
                     Map<String, Integer> each = new HashMap<String, Integer>();
-                    each.put("source", rootnode.get(node.getName()));
-                    each.put("target", nodeeach.get(child.getName()));
+                    each.put("source", nodes.get(node.getName()));
+                    each.put("target", nodes.get(child.getName()));
                     result.add(each);
                     queue.offer(child);
                     if (nodes.size() >= count) {
                         finalResult.put("links", result);
-                        finalResult.put("nodes", nodes);
+                        finalResult.put("nodes", nodes_result);
                         return finalResult;
                     }
                 }
