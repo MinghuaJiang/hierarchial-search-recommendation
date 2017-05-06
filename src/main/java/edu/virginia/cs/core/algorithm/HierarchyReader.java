@@ -60,6 +60,9 @@ public class HierarchyReader {
             int size = queue.size();
             for (int i = 0; i < size; i++) {
                 HierarchyNode node = queue.poll();
+                if(!nodes.containsKey(node)){
+                    nodes.put(node.getName(), index++);
+                }
                 for (HierarchyNode child : node.getChildren()) {
                     nodes.put(child.getName(), index++);
 
