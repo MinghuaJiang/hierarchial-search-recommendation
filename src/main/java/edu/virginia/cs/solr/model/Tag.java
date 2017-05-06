@@ -19,9 +19,6 @@ import java.util.List;
 @XmlRootElement(name = "row")
 @SolrDocument(solrCoreName = "tags")
 public class Tag implements Serializable {
-    @Transient
-    @Autowired
-    private QuestionRepository repository;
     @Id
     @Indexed(name = "id")
     private String id;
@@ -74,8 +71,8 @@ public class Tag implements Serializable {
         return score;
     }
 
-    public void calculateITScore(List<Topic> topics, int tagSize) {
-        double[] topic_pro_arr = getTopKTopicProbArr(topics, tagSize);
+    public void calculateITScore(List<Topic> topics, int tagSize, QuestionRepository repository) {
+        double[] topic_pro_arr = getTopKTopicProbArr(topics, tagSize, repository);
         this.score = (tagDistinctCount * Math.log(tagRawCount + 1)) * this.getTagEntropy(topic_pro_arr);
     }
 
@@ -83,17 +80,17 @@ public class Tag implements Serializable {
         this.score = this.score / maxScore;
     }
 
-    private double[] getTopKTopicProbArr(List<Topic> topics, int tagSize) {
+    private double[] getTopKTopicProbArr(List<Topic> topics, int tagSize, QuestionRepository repository) {
         double[] topicProb = new double[topics.size()];
 
         Topic[] topKTopicsArr = topics.toArray(new Topic[0]);
         for (int i = 0; i < topics.size(); i++) {
-            topicProb[i] = this.co_occurrence(topKTopicsArr[i]) / tagSize;
+            topicProb[i] = this.co_occurrence(topKTopicsArr[i], repository) / tagSize;
         }
         return topicProb;
     }
 
-    public long co_occurrence(Topic topic) {
+    public long co_occurrence(Topic topic, QuestionRepository repository) {
         return  repository.getQuestionsCocurrence(tagName, topic.getTopicName());
     }
 
