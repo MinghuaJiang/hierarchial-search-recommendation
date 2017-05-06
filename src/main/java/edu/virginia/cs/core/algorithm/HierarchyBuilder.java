@@ -79,7 +79,7 @@ public class HierarchyBuilder{
             if(count % 2 == 0){
                 System.out.println(count + " tag passed");
             }
-            
+
             if(count == 200){
                 ObjectOutputStream oos = null;
                 try {
@@ -97,7 +97,7 @@ public class HierarchyBuilder{
             HierarchyNode newParent = new HierarchyNode();
             double minDiff = 0;
             for (HierarchyNode tk : candidateParents) {
-                double diff = getMinCostDiff(tk, hierarchy);
+                double diff = getMinCostDiff(tk, hierarchy) + getMinDistance(tk, tPrime);
                 if (diff < minDiff) {
                     minDiff = diff;
                     newParent = tk;
