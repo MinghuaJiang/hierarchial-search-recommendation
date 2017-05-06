@@ -79,6 +79,19 @@ public class HierarchyBuilder{
             if(count % 2 == 0){
                 System.out.println(count + " tag passed");
             }
+            
+            if(count == 200){
+                ObjectOutputStream oos = null;
+                try {
+                    oos = new ObjectOutputStream(new FileOutputStream(new File(hierarchyFile)));
+                    oos.writeObject(hierarchy);
+                } finally {
+                    if (oos != null) {
+                        oos.close();
+                    }
+                }
+            }
+
             HierarchyNode tPrime = new HierarchyNode(t);
             List<HierarchyNode> candidateParents = getCandidateParents(hierarchy.getDepth());
             HierarchyNode newParent = new HierarchyNode();
