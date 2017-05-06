@@ -4,23 +4,25 @@
 
 // D3 labeled forced layout
 
-var svg = d3.select("svg"),
-    width = +svg.attr("width"),
-    height = +svg.attr("height");
+var relationGraph = d3.select("#innerGraph"),
+    width = +relationGraph.attr("width"),
+    height = +relationGraph.attr("height");
 
 var radius = d3.scaleSqrt()
     .domain([0,20000])
     .range([0,20]);
 
+var count = 8;
+
 var color = d3.scaleOrdinal(d3.schemeCategory20);
 
-var link = svg.append("g")
+var link = relationGraph.append("g")
     .attr("class", "link")
     .attr("stroke","#9ecae1")
     .attr("stroke-width","1.5px")
     .selectAll("line");
 
-var node = svg.append("g")
+var node = relationGraph.append("g")
     .attr("class", "nodes")
     .selectAll(".node");
 
@@ -47,81 +49,85 @@ d3.json("/graph.json", function(error, json) {
     node.append("circle")
         .attr("r", 10)
         .attr("fill", function(d) { return color(d.group); });
-    
+
+    node.on("dblclick", function () {
+        showRecommendGraph();
+    });
+
     node.on("click", function (d) {
-         var count = 8;
-         $.get("/recommendation/question/"+ d.name +"/" + count).done(function (obj) {
-             node.style("opacity", 0);
-             link.style("opacity", 0);
-             // console.log(d);
-             console.log(obj);
-             // console.log(this);
-             var json = JSON.parse(obj);
-             console.log("#" + json.questions);
-             console.log("&" + json["questions"]);
-             console.log("*" + json['questions']);
 
-             var recommendWindow = d3.select("svg")
-                 .append("g")
-                 .attr("class", "recommendPage");
+        $('#numOfNodes li').on('click', function(){
+            count = $(this).text();
+        });
+        console.log(count);
 
-             var centralTag = recommendWindow
-                 .append("g")
-                 .attr("class", "centralTag")
-                 .attr("transform", "translate(200,300)");
+        $.get("/recommendation/question/"+ d.name +"/" + count).done(function (obj) {
+         node.attr("visibility","hidden");
+         link.attr("visibility","hidden");
+         console.log("print d" + d);
+         var json = JSON.parse(obj);
 
-             var tag = centralTag
-                 .append("circle")
-                 .attr("r", 100)
-                 .attr("fill", "#ffccff");
+         var recommendWindow = relationGraph
+             .append("g")
+             .attr("class", "recommendPage");
 
-             var tagName = centralTag
-                 .append("text")
-                 .attr("dx", -30)
-                 .attr("dy", ".35em")
-                 .attr("font-size", "20px")
-                 .attr("font-color", "white")
-                 .text(function () {
-                     return d.name;
-                 });
+         var centralTag = recommendWindow
+             .append("g")
+             .attr("class", "centralTag")
+             .attr("transform", "translate(250,300)");
 
-             console.log("checking format:" + json);
+         var tag = centralTag
+             .append("circle")
+             .attr("r", 100)
+             .attr("fill", "#ffccff");
 
-             var recommend = recommendWindow
-                 .selectAll("text")
-                 .data(json)
-                 .enter()
-                 .append("text")
-                 .attr("class", "textBox")
-                 .attr("border-radius", "10px")
-                 .attr("border","2px solid #73AD21")
-                 .attr("width", "100px")
-                 .attr("height", "25px")
-                 .attr("x", function () {
-                     return Math.random() * (width - 50);
-                 })
-                 .attr("y", function () {
-                     return Math.random() * (height - 50);
-                 })
-                 .attr("text-overflow", "inherit")
-                 .attr("overflow","hidden")
-                 .text(function (x) {
-                     console.log(x.questionTitle);
-                     return x["questionTitle"];
-                 });
+         var tagName = centralTag
+             .append("text")
+             .attr("dx", -30)
+             .attr("dy", ".35em")
+             .attr("font-size", "20px")
+             .attr("font-color", "white")
+             .text(function () {
+                 return d.name;
+             });
 
-             // $(document).ready(function(){
-             //     $('.textBox').jqFloat();
-             // });
+         console.log("checking format:" + json);
 
-             var force = d3.forceSimulation()
-                 .force("link", d3.forceLink())
-                 .force("charge", d3.forceManyBody())
-                 .force("center", d3.forceCenter(width/2, height/2));
+         var recommend = recommendWindow
+             .selectAll("text")
+             .data(json)
+             .enter()
+             .append("text")
+             .attr("class", "textBox")
+             .attr("border-radius", "10px")
+             .attr("border","2px solid #73AD21")
+             .attr("width", "100px")
+             .attr("height", "25px")
+             .attr("x", function () {
+                 return Math.random() * (width - 50);
+             })
+             .attr("y", function () {
+                 return Math.random() * (height - 50);
+             })
+             .attr("text-overflow", "inherit")
+             .attr("overflow","hidden")
+             .text(function (x) {
+                 console.log(x.questionTitle);
+                 return x["questionTitle"];
+             });
 
-             force.nodes(recommend)
-                 .on("tick", ticked);
-         });
+         // $(document).ready(function(){
+         //     $('.textBox').jqFloat();
+         // });
+
+         var force = d3.forceSimulation()
+             .force("link", d3.forceLink())
+             .force("charge", d3.forceManyBody())
+             .force("center", d3.forceCenter(width/2, height/2));
+
+         force.nodes(recommend)
+             .on("tick", ticked);
+        });
     });
 
     // use same image on each node
@@ -181,8 +187,11 @@ function dragended(d) {
 var innerGraph = $("#innerGraph");
 console.log(innerGraph.width);
 
-$('.goBack').click(function () {
-    $('.recommenPage').remove();
-    node.show("fast");
-    link.show("fast");
+$('#goBack').click(function () {
+    $('.recommendPage').remove();
+    // node.style("opacity", 1);
+    // link.style("opacity", 1);
+    node.attr("visibility","visible");
+    link.attr("visibility","visible");
 });
+

@@ -1,20 +1,26 @@
 var margin = {top: 40, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
+    barCharWidth =  - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 var formatPercent = d3.format(".0%");
 
 var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
+    .rangeRoundBands([0, barCharWidth], .1);
 
 var y = d3.scale.linear()
     .range([height, 0]);
 
-var xAxis = d3.svg.axis()
+var barChart = d3.select("#innerGraph").append("svg")
+    .attr("width", barCharWidth + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var xAxis = d3.barChart.axis()
     .scale(x)
     .orient("bottom");
 
-var yAxis = d3.svg.axis()
+var yAxis = d3.barChart.axis()
     .scale(y)
     .orient("left")
     .tickFormat(formatPercent);
@@ -24,26 +30,57 @@ var tip = d3.tip()
     .offset([-10, 0])
     .html(function(d) {
         return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
-    })
+    });
 
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+barChart.call(tip);
 
-svg.call(tip);
+function showRecommendGraph() {
+    $.get("/recommendation/question/"+ node.name +"/" + count).done(function (obj) {
+        var json = JSON.parse(obj);
+        node.attr("visibility","hidden");
+        link.attr("visibility","hidden");
+
+        x.domain(data.map(function(d) { return d.letter; }));
+        y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
+
+        barChart.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        barChart.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Frequency");
+
+        barChart.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d) { return x(d.letter); })
+            .attr("width", x.rangeBand())
+            .attr("y", function(d) { return y(d.frequency); })
+            .attr("height", function(d) { return height - y(d.frequency); })
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide)
+    });
+}
 
 d3.tsv("data.tsv", type, function(error, data) {
     x.domain(data.map(function(d) { return d.letter; }));
     y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
 
-    svg.append("g")
+    barChart.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
-    svg.append("g")
+    barChart.append("g")
         .attr("class", "y axis")
         .call(yAxis)
         .append("text")
@@ -53,7 +90,7 @@ d3.tsv("data.tsv", type, function(error, data) {
         .style("text-anchor", "end")
         .text("Frequency");
 
-    svg.selectAll(".bar")
+    barChart.selectAll(".bar")
         .data(data)
         .enter().append("rect")
         .attr("class", "bar")
