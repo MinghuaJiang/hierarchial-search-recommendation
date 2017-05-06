@@ -16,7 +16,6 @@ import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -68,7 +67,7 @@ public class TagRepositoryImpl implements TagSearch{
         double maxScore = 0;
         for(Tag tag: lists){
             tag.setTagRawCount(questionRepository.getTotalTermFrequency(tag.getTagName()));
-            tag.calculateITScore(topK, lists.size());
+            tag.calculateITScore(topK, lists.size(), questionRepository);
             maxScore = Math.max(maxScore, tag.getScore());
             tags.add(tag);
         }
