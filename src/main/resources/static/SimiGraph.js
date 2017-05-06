@@ -24,7 +24,6 @@ var link = relationGraph.append("g")
 
 var node = relationGraph.append("g")
     .attr("class", "nodes")
-    .attr("border","2px solid red")
     .selectAll(".node");
 
 var drag = d3.drag()
@@ -49,6 +48,7 @@ d3.json("/graph.json", function(error, json) {
 
     node.append("circle")
         .attr("r", 10)
+        .attr("border", "2px solid red")
         .attr("fill", function(d) { return color(d.group); });
 
     console.log("before dblclick: " + node);
@@ -202,7 +202,7 @@ $('#goBack').click(function () {
 
 
 // recommendGraph
-var margin = {top: 40, right: 20, bottom: 30, left: 40},
+var margin = {top: 40, right: 20, bottom: 40, left: 45},
     barCharWidth = width - margin.left - margin.right,
     barCharHeight = height - margin.top - margin.bottom;
 
@@ -240,7 +240,7 @@ function showRecommendGraph() {
         link.attr("visibility","hidden");
 
         json.forEach(function (d) {
-            d.horizontal = d.questionTitle;
+            d.horizontal = d.vote;
             d.vertical = d.answerCount;
         });
 
@@ -248,6 +248,7 @@ function showRecommendGraph() {
         y.domain([0, d3.max(json, function(d) { return d.vertical; })]);
 
 
+        var tooltip = d3.select("body").append("div").attr("class", "toolTip");
         // append the rectangles for the bar chart
         barChart.selectAll(".bar")
             .data(json)
@@ -260,18 +261,41 @@ function showRecommendGraph() {
                 console.log(d.vertical);
                 console.log(y(d.vertical));
                 return barCharHeight - y(d.vertical);
-            });
-            // .on('mouseover', tip.show)
-            // .on('mouseout', tip.hide);
+            })
+            .on("mousemove", function(d){
+                tooltip
+                    .style("left", d3.event.pageX - 50 + "px")
+                    .style("top", d3.event.pageY - 70 + "px")
+                    .style("display", "inline-block")
+                    .html((d.questionTitle) + "<br>");
+            })
+            .on("mouseout", function(d){ tooltip.style("display", "none");});
 
         // add the x Axis
         barChart.append("g")
             .attr("transform", "translate(0," + barCharHeight + ")")
+            // .append("text")
+            // .attr("transform", "translate(" + (barCharWidth/2) + "," + (barCharHeight + margin.bottom - 5) + ")")
+            // .text("vote")
             .call(d3.axisBottom(x));
 
         // add the y Axis
         barChart.append("g")
+            // .append("text")
+            // .attr("transform", "translate(-35," +  (barCharHeight+margin.bottom)/2 + ") rotate(-90)")
+            // .text("answer count")
             .call(d3.axisLeft(y));
+
+        //add labels
+        barChart
+            .append("text")
+            .attr("transform", "translate(-35," +  (barCharHeight+margin.bottom)/2 + ") rotate(-90)")
+            .text("# answer count");
+
+        barChart
+            .append("text")
+            .attr("transform", "translate(" + (barCharWidth/2) + "," + (barCharHeight + margin.bottom - 5) + ")")
+            .text("vote");
     });
 }
 

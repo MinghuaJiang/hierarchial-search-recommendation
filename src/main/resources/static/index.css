@@ -147,31 +147,42 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 /*recommendGraph css*/
 .bar { fill: steelblue; }
 
-.d3-tip {
-    line-height: 1;
-    padding: 6px;
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    border-radius: 4px;
-    font-size: 12px;
-}
+/*.d3-tip {*/
+    /*line-height: 1;*/
+    /*padding: 6px;*/
+    /*background: rgba(0, 0, 0, 0.8);*/
+    /*color: #fff;*/
+    /*border-radius: 4px;*/
+    /*font-size: 12px;*/
+/*}*/
 
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-    box-sizing: border-box;
-    display: inline;
-    font-size: 10px;
-    width: 100%;
-    line-height: 1;
-    color: rgba(0, 0, 0, 0.8);
-    content: "\25BC";
+/*!* Creates a small triangle extender for the tooltip *!*/
+/*.d3-tip:after {*/
+    /*box-sizing: border-box;*/
+    /*display: inline;*/
+    /*font-size: 10px;*/
+    /*width: 100%;*/
+    /*line-height: 1;*/
+    /*color: rgba(0, 0, 0, 0.8);*/
+    /*content: "\25BC";*/
+    /*position: absolute;*/
+    /*text-align: center;*/
+/*}*/
+
+/*!* Style northward tooltips specifically *!*/
+/*.d3-tip.n:after {*/
+    /*margin: -2px 0 0 0;*/
+    /*top: 100%;*/
+    /*left: 0;*/
+/*}*/
+
+.toolTip {
     position: absolute;
+    display: none;
+    min-width: 80px;
+    height: auto;
+    background: none repeat scroll 0 0 #ffffff;
+    border: 1px solid #6F257F;
+    padding: 14px;
     text-align: center;
-}
-
-/* Style northward tooltips specifically */
-.d3-tip.n:after {
-    margin: -2px 0 0 0;
-    top: 100%;
-    left: 0;
 }
