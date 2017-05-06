@@ -24,6 +24,6 @@ public class HierarchyReader {
     }
     public static void main(String[] args) throws Exception {
         HierarchyReader reader = new HierarchyReader();
-        reader.readHierachy();
+        Hierarchy hierarchy = reader.readHierachy();
     }
 }
