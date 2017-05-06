@@ -36,16 +36,21 @@ public class HierarchyReader {
     private static Map<String, Object> getNodeHierachy(HierarchyNode central, int count) {
         List<Map<String, Integer>> result = new ArrayList<Map<String, Integer>>();
         HierarchyNode current = central;
-        Map<String, Integer> nodes = new HashMap<String, Integer>();
+        List<Map<String, Integer>> nodes = new ArrayList<Map<String, Integer>>();
         Map<String, Object> finalResult = new HashMap<String, Object>();
         int index = 0;
         while (current.getParentNode() != null) {
             Map<String, Integer> each = new HashMap<>();
-            nodes.put(current.getName(), index++);
-            each.put("src", nodes.get(current.getName()));
+            Map<String, Integer> node = new HashMap<>();
+            node.put(current.getName(), index++);
+            nodes.add(node);
+            each.put("src", node.get(current.getName()));
             current = current.getParentNode();
-            nodes.put(current.getName(), index++);
-            each.put("target", nodes.get(current.getName()));
+            node = new HashMap<>();
+            node.put(current.getName(), index++);
+            nodes.add(node);
+            node.put(current.getName(), index++);
+            each.put("target", node.get(current.getName()));
             result.add(each);
             if (nodes.size() >= count) {
                 finalResult.put("links", result);
@@ -60,15 +65,18 @@ public class HierarchyReader {
             int size = queue.size();
             for (int i = 0; i < size; i++) {
                 HierarchyNode node = queue.poll();
-                if(!nodes.containsKey(node)){
-                    nodes.put(node.getName(), index++);
-                }
+               // if(!nodes.containsKey(node)){
+                Map<String, Integer> rootnode = new HashMap<>();
+                rootnode.put(node.getName(), index++);
+                nodes.add(rootnode);
                 for (HierarchyNode child : node.getChildren()) {
-                    nodes.put(child.getName(), index++);
+                    Map<String,Integer> nodeeach = new HashMap<>();
+                    nodeeach.put(child.getName(), index++);
+                    nodes.add(nodeeach);
 
                     Map<String, Integer> each = new HashMap<String, Integer>();
-                    each.put("src", nodes.get(node.getName()));
-                    each.put("target", nodes.get(child.getName()));
+                    each.put("src", rootnode.get(node.getName()));
+                    each.put("target", nodeeach.get(child.getName()));
                     result.add(each);
                     queue.offer(child);
                     if (nodes.size() >= count) {
