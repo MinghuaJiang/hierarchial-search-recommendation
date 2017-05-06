@@ -65,11 +65,16 @@ public class TagRepositoryImpl implements TagSearch{
         TreeSet<Tag> tags = new TreeSet<>(new TagComparator());
         List<Tag> lists = getAllTags();
         double maxScore = 0;
+        int count = 0;
         for(Tag tag: lists){
             tag.setTagRawCount(questionRepository.getTotalTermFrequency(tag.getTagName()));
             tag.calculateITScore(topK, lists.size(), questionRepository);
             maxScore = Math.max(maxScore, tag.getScore());
             tags.add(tag);
+            count++;
+            if(count % 100 == 0){
+                System.out.println(count + "tags passed");
+            }
         }
         for(Tag tag: tags){
             tag.normalizeScore(maxScore);
