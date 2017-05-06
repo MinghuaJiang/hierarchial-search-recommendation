@@ -3,7 +3,9 @@ package edu.virginia.cs.core.algorithm;
 import edu.virginia.cs.solr.model.Topic;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -30,9 +32,22 @@ public class TopKTopicReader {
         }
     }
 
+    public TopKTopicReader() {
+    }
+
     public static void main(String[] args) throws Exception {
         TopKTopicReader reader = new TopKTopicReader();
         List<Topic> topicList = reader.getTopKTopic();
         topicList.forEach(System.out::println);
+        //topicList.forEach(System.out::println);
+        ObjectOutputStream oos = null;
+        try {
+            oos = new ObjectOutputStream(new FileOutputStream("topic.dat"));
+            oos.writeObject(topicList);
+        } finally {
+            if (oos != null) {
+                oos.close();
+            }
+        }
     }
 }

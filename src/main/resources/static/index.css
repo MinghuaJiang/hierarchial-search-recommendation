@@ -97,6 +97,9 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
     display: inline-block;
 }
 
+
+
+/*simiGraph css */
 #graphBox{
     display: none;
     border: 1px solid #DBDBDB;
@@ -139,14 +142,53 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
     overflow: hidden;
 }
 
-/*.node {*/
-    /*cursor: pointer;*/
-    /*stroke: #3182bd;*/
-    /*stroke-width: 1.5px;*/
-/*}*/
 
-/*.link {*/
-    /*fill: none;*/
-    /*stroke: #9ecae1;*/
-    /*stroke-width: 1.5px;*/
-/*}*/
+
+/*recommendGraph css*/
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.bar {
+    fill: orange;
+}
+
+.bar:hover {
+    fill: orangered ;
+}
+
+.x.axis path {
+    display: none;
+}
+
+.d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+}
