@@ -94,8 +94,8 @@ public class HierarchyBuilder{
 
             HierarchyNode tPrime = new HierarchyNode(t);
             List<HierarchyNode> candidateParents = getCandidateParents(hierarchy.getDepth());
-            HierarchyNode newParent = new HierarchyNode();
-            double minDiff = 0;
+            HierarchyNode newParent = null;
+            double minDiff = Double.MAX_VALUE;
             for (HierarchyNode tk : candidateParents) {
                 double diff = getMinCostDiff(tk, hierarchy) + getMinDistance(tk, tPrime);
                 if (diff < minDiff) {
