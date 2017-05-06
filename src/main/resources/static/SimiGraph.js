@@ -106,9 +106,6 @@ d3.json("/graph.json", function(error, json) {
                  .attr("text-overflow", "inherit")
                  .attr("overflow","hidden")
                  .text(function (x) {
-                     // alert(x.questionTitle); not working
-                     // alert(x["questionTitle"]); still not working
-                     // alert(x.questionTitle); // work !!!!!
                      console.log(x.questionTitle);
                      return x["questionTitle"];
                  });
@@ -122,21 +119,8 @@ d3.json("/graph.json", function(error, json) {
                  .force("charge", d3.forceManyBody())
                  .force("center", d3.forceCenter(width/2, height/2));
 
-             // force.nodes(recommend).on({
-             //     click: function () {
-             //         function openPage() {
-             //             $.get("/openPage/"+$(this).val()+"/").done();
-             //         }
-             //     },
-             //     tick: ticked
-             //     });
              force.nodes(recommend)
                  .on("tick", ticked);
-                 // .on("click", function () {
-                 //     function openPage() {
-                 //         $.get("/open")
-                 //     }
-                 // })
          });
     });
 
@@ -197,10 +181,8 @@ function dragended(d) {
 var innerGraph = $("#innerGraph");
 console.log(innerGraph.width);
 
-$('goBack').click(function () {
-    $('recommenPage').remove();
-    $('node').show("fast");
-    $('link').show("fast");
+$('.goBack').click(function () {
+    $('.recommenPage').remove();
+    node.show("fast");
+    link.show("fast");
 });
-
-

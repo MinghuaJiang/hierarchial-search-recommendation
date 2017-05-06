@@ -1,7 +1,6 @@
 package edu.virginia.cs.core;
 
 import edu.virginia.cs.core.algorithm.HierarchyBuilder;
-import edu.virginia.cs.solr.repository.QuestionRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
