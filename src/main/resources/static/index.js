@@ -49,12 +49,11 @@ function onSearch(){
                                                                              });
 
                                          $('#result_content'+key).text($(value.questionBody).text().substr(0, 250) + "...");
-                                         //alert(value.tags);
-                                         //alert(value.questionId);
-                                         //alert(value.creationDate);
-                                         //alert(value.score);
-                                         //alert(value.answerCount);
                                        });
+
+                                       for(i = json['questions'].length; i < 5; i++) {
+                                            document.getElementById('result'+i).style.display = 'none';
+                                       }
                                   });
                       }
                   });

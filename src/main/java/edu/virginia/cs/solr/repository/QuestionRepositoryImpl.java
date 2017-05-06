@@ -139,23 +139,32 @@ public class QuestionRepositoryImpl implements QuestionSearch {
         return cluster;
     }
 
-    private Map<String, Object> getNodeCluster(HierarchyNode central, int count) {
+    private static Map<String, Object> getNodeCluster(HierarchyNode central, int count) {
         List<Map<String, Integer>> result = new ArrayList<Map<String, Integer>>();
         HierarchyNode current = central;
         Map<String, Integer> nodes = new HashMap<String, Integer>();
+        List<Map<String, Object>> nodes_result = new ArrayList<Map<String, Object>>();
         Map<String, Object> finalResult = new HashMap<String, Object>();
         int index = 0;
         while (current.getParentNode() != null) {
             Map<String, Integer> each = new HashMap<>();
             nodes.put(current.getName(), index++);
-            each.put("src", nodes.get(current.getName()));
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("name", current.getName());
+            map.put("group", current.getLevel());
+            nodes_result.add(map);
+            each.put("source", nodes.get(current.getName()));
             current = current.getParentNode();
             nodes.put(current.getName(), index++);
             each.put("target", nodes.get(current.getName()));
             result.add(each);
+            map = new HashMap<String, Object>();
+            map.put("name", current.getName());
+            map.put("group", current.getLevel());
+            nodes_result.add(map);
             if (nodes.size() >= count) {
                 finalResult.put("links", result);
-                finalResult.put("nodes", nodes);
+                finalResult.put("nodes", nodes_result);
                 return finalResult;
             }
         }
@@ -166,17 +175,29 @@ public class QuestionRepositoryImpl implements QuestionSearch {
             int size = queue.size();
             for (int i = 0; i < size; i++) {
                 HierarchyNode node = queue.poll();
+                if(!nodes.containsKey(node)){
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("name", node.getName());
+                    map.put("group", node.getLevel());
+                    nodes_result.add(map);
+                    nodes.put(node.getName(), index++);
+                }
                 for (HierarchyNode child : node.getChildren()) {
                     nodes.put(child.getName(), index++);
 
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("name", child.getName());
+                    map.put("group", child.getLevel());
+                    nodes_result.add(map);
+
                     Map<String, Integer> each = new HashMap<String, Integer>();
-                    each.put("src", nodes.get(node.getName()));
+                    each.put("source", nodes.get(node.getName()));
                     each.put("target", nodes.get(child.getName()));
                     result.add(each);
                     queue.offer(child);
                     if (nodes.size() >= count) {
                         finalResult.put("links", result);
-                        finalResult.put("nodes", nodes);
+                        finalResult.put("nodes", nodes_result);
                         return finalResult;
                     }
                 }
@@ -264,11 +285,12 @@ public class QuestionRepositoryImpl implements QuestionSearch {
         SolrQuery query = new SolrQuery();
         query.set("q", searchTerm);
         query.set("qf", "title_t^1.5 body_t");
+        //query.set("qf",  "title_t body_t");
         query.set("defType", "edismax");
-        query.addFilterQuery("answers_l:[1 TO *]");
+        //query.addFilterQuery("answers_l:[1 TO *]");
         query.set("stopwords", true);
         query.set("lowercaseOperators", true);
-        query.setStart(pageRequest.getPageNumber());
+        query.setStart(pageRequest.getPageNumber() * pageRequest.getPageSize());
         query.setRows(pageRequest.getPageSize());
         QueryResponse resp = template.getSolrClient().
                 query(Question.class.getAnnotation(SolrDocument.class).solrCoreName(), query);
