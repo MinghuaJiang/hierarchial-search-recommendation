@@ -24,6 +24,7 @@ var link = relationGraph.append("g")
 
 var node = relationGraph.append("g")
     .attr("class", "nodes")
+    .attr("border","2px solid red")
     .selectAll(".node");
 
 var drag = d3.drag()
@@ -50,85 +51,87 @@ d3.json("/graph.json", function(error, json) {
         .attr("r", 10)
         .attr("fill", function(d) { return color(d.group); });
 
+    console.log("before dblclick: " + node);
+
     node.on("dblclick", function () {
         showRecommendGraph();
     });
 
-    node.on("click", function (d) {
-
-        $('#numOfNodes li').on('click', function(){
-            count = $(this).text();
-        });
-        console.log(count);
-
-        $.get("/recommendation/question/"+ d.name +"/" + count).done(function (obj) {
-         node.attr("visibility","hidden");
-         link.attr("visibility","hidden");
-         console.log("print d" + d);
-         var json = JSON.parse(obj);
-
-         var recommendWindow = relationGraph
-             .append("g")
-             .attr("class", "recommendPage");
-
-         var centralTag = recommendWindow
-             .append("g")
-             .attr("class", "centralTag")
-             .attr("transform", "translate(250,300)");
-
-         var tag = centralTag
-             .append("circle")
-             .attr("r", 100)
-             .attr("fill", "#ffccff");
-
-         var tagName = centralTag
-             .append("text")
-             .attr("dx", -30)
-             .attr("dy", ".35em")
-             .attr("font-size", "20px")
-             .attr("font-color", "white")
-             .text(function () {
-                 return d.name;
-             });
-
-         console.log("checking format:" + json);
-
-         var recommend = recommendWindow
-             .selectAll("text")
-             .data(json)
-             .enter()
-             .append("text")
-             .attr("class", "textBox")
-             .attr("border-radius", "10px")
-             .attr("border","2px solid #73AD21")
-             .attr("width", "100px")
-             .attr("height", "25px")
-             .attr("x", function () {
-                 return Math.random() * (width - 50);
-             })
-             .attr("y", function () {
-                 return Math.random() * (height - 50);
-             })
-             .attr("text-overflow", "inherit")
-             .attr("overflow","hidden")
-             .text(function (x) {
-                 console.log(x.questionTitle);
-                 return x["questionTitle"];
-             });
-
-         // $(document).ready(function(){
-         //     $('.textBox').jqFloat();
-         // });
-
-         var force = d3.forceSimulation()
-             .force("link", d3.forceLink())
-             .force("charge", d3.forceManyBody())
-             .force("center", d3.forceCenter(width/2, height/2));
-
-         force.nodes(recommend)
-             .on("tick", ticked);
-        });
-    });
+    // node.on("click", function (d) {
+    //
+    //     $('#numOfNodes li').on('click', function(){
+    //         count = $(this).text();
+    //     });
+    //     console.log(count);
+    //
+    //     $.get("/recommendation/question/"+ d.name +"/" + count).done(function (obj) {
+    //      node.attr("visibility","hidden");
+    //      link.attr("visibility","hidden");
+    //      console.log("print d" + d);
+    //      var json = JSON.parse(obj);
+    //
+    //      var recommendWindow = relationGraph
+    //          .append("g")
+    //          .attr("class", "recommendPage");
+    //
+    //      var centralTag = recommendWindow
+    //          .append("g")
+    //          .attr("class", "centralTag")
+    //          .attr("transform", "translate(250,300)");
+    //
+    //      var tag = centralTag
+    //          .append("circle")
+    //          .attr("r", 100)
+    //          .attr("fill", "#ffccff");
+    //
+    //      var tagName = centralTag
+    //          .append("text")
+    //          .attr("dx", -30)
+    //          .attr("dy", ".35em")
+    //          .attr("font-size", "20px")
+    //          .attr("font-color", "white")
+    //          .text(function () {
+    //              return d.name;
+    //          });
+    //
+    //      console.log("checking format:" + json);
+    //
+    //      var recommend = recommendWindow
+    //          .selectAll("text")
+    //          .data(json)
+    //          .enter()
+    //          .append("text")
+    //          .attr("class", "textBox")
+    //          .attr("border-radius", "10px")
+    //          .attr("border","2px solid #73AD21")
+    //          .attr("width", "100px")
+    //          .attr("height", "25px")
+    //          .attr("x", function () {
+    //              return Math.random() * (width - 50);
+    //          })
+    //          .attr("y", function () {
+    //              return Math.random() * (height - 50);
+    //          })
+    //          .attr("text-overflow", "inherit")
+    //          .attr("overflow","hidden")
+    //          .text(function (x) {
+    //              console.log(x.questionTitle);
+    //              return x["questionTitle"];
+    //          });
+    //
+    //      // $(document).ready(function(){
+    //      //     $('.textBox').jqFloat();
+    //      // });
+    //
+    //      var force = d3.forceSimulation()
+    //          .force("link", d3.forceLink())
+    //          .force("charge", d3.forceManyBody())
+    //          .force("center", d3.forceCenter(width/2, height/2));
+    //
+    //      force.nodes(recommend)
+    //          .on("tick", ticked);
+    //     });
+    // });
 
     // use same image on each node
     // node.append("image")
@@ -189,9 +192,91 @@ console.log(innerGraph.width);
 
 $('#goBack').click(function () {
     $('.recommendPage').remove();
-    // node.style("opacity", 1);
-    // link.style("opacity", 1);
     node.attr("visibility","visible");
     link.attr("visibility","visible");
+    console.log(node);
+    $('#barChart').remove();
 });
 
+
+
+
+// recommendGraph
+var margin = {top: 40, right: 20, bottom: 30, left: 40},
+    barCharWidth = width - margin.left - margin.right,
+    barCharHeight = height - margin.top - margin.bottom;
+
+// var formatPercent = d3.format(".0%");
+
+var x = d3.scaleBand()
+    .range([0, barCharWidth])
+    .padding(0.1);
+
+var y = d3.scaleLinear()
+    .range([height, 0]);
+
+var barChart = d3.select("#innerGraph").append("svg")
+    .attr("id", "barChart")
+    .attr("width", barCharWidth + margin.left + margin.right)
+    .attr("height", barCharHeight + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(function(d) {
+        return "<strong>questionTitle:</strong> <span style='color:red'>" + d.questionTitle + "</span>";
+    });
+
+barChart.call(tip);
+
+function showRecommendGraph() {
+    $.get("/recommendation/question/"+ node.name +"/" + count).done(function (obj) {
+        var json = JSON.parse(obj);
+        var arr = Object.values(json);
+        console.log("arr:  " + arr);
+        node.attr("visibility","hidden");
+        link.attr("visibility","hidden");
+
+        json.forEach(function (d) {
+            d.horizontal = d.questionTitle;
+            d.vertical = d.answerCount;
+        });
+
+        x.domain(json.map(function(d) { return d.horizontal; }));
+        y.domain([0, d3.max(json, function(d) { return d.vertical; })]);
+
+
+        // append the rectangles for the bar chart
+        barChart.selectAll(".bar")
+            .data(json)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d) { return x(d.horizontal); })
+            .attr("width", x.bandwidth())
+            .attr("y", function(d) { return y(d.vertical); })
+            .attr("height", function(d) {
+                console.log(d.vertical);
+                console.log(y(d.vertical));
+                return barCharHeight - y(d.vertical);
+            });
+            // .on('mouseover', tip.show)
+            // .on('mouseout', tip.hide);
+
+        // add the x Axis
+        barChart.append("g")
+            .attr("transform", "translate(0," + barCharHeight + ")")
+            .call(d3.axisBottom(x));
+
+        // add the y Axis
+        barChart.append("g")
+            .call(d3.axisLeft(y));
+    });
+}
+
+//
+// function type(d) {
+//     d.frequency = +d.frequency;
+//     return d;
+// }

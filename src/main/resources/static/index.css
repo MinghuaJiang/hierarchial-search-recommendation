@@ -145,32 +145,15 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 
 
 /*recommendGraph css*/
-.axis path,
-.axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-}
-
-.bar {
-    fill: orange;
-}
-
-.bar:hover {
-    fill: orangered ;
-}
-
-.x.axis path {
-    display: none;
-}
+.bar { fill: steelblue; }
 
 .d3-tip {
     line-height: 1;
-    font-weight: bold;
-    padding: 12px;
+    padding: 6px;
     background: rgba(0, 0, 0, 0.8);
     color: #fff;
-    border-radius: 2px;
+    border-radius: 4px;
+    font-size: 12px;
 }
 
 /* Creates a small triangle extender for the tooltip */
@@ -186,9 +169,9 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
     text-align: center;
 }
 
-/* Style northward tooltips differently */
+/* Style northward tooltips specifically */
 .d3-tip.n:after {
-    margin: -1px 0 0 0;
+    margin: -2px 0 0 0;
     top: 100%;
     left: 0;
 }
