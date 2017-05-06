@@ -1,5 +1,7 @@
 package edu.virginia.cs.core.algorithm;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import edu.virginia.cs.core.model.Hierarchy;
 import edu.virginia.cs.core.model.HierarchyNode;
 import edu.virginia.cs.solr.model.Question;
@@ -92,8 +94,8 @@ public class HierarchyBuilder{
 
             HierarchyNode tPrime = new HierarchyNode(t);
             List<HierarchyNode> candidateParents = getCandidateParents(hierarchy.getDepth());
-            HierarchyNode newParent = new HierarchyNode();
-            double minDiff = 0;
+            HierarchyNode newParent = null;
+            double minDiff = Double.MAX_VALUE;
             for (HierarchyNode tk : candidateParents) {
                 double diff = getMinCostDiff(tk, hierarchy) + getMinDistance(tk, tPrime);
                 if (diff < minDiff) {
