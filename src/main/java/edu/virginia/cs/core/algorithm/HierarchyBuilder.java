@@ -77,7 +77,7 @@ public class HierarchyBuilder{
             if(count % 2 == 0){
                 System.out.println(count + " tag passed");
             }
-            
+
             if(count == 200){
                 ObjectOutputStream oos = null;
                 try {
@@ -95,7 +95,7 @@ public class HierarchyBuilder{
             HierarchyNode newParent = new HierarchyNode();
             double minDiff = 0;
             for (HierarchyNode tk : candidateParents) {
-                double diff = getMinCostDiff(tk, hierarchy);
+                double diff = getMinCostDiff(tk, hierarchy) + getMinDistance(tk, tPrime);
                 if (diff < minDiff) {
                     minDiff = diff;
                     newParent = tk;
@@ -154,6 +154,9 @@ public class HierarchyBuilder{
     }
 
     private double getMinDistance(HierarchyNode n1, HierarchyNode n2) {
+        if(n1.getLevel() == 1 && n2.getLevel() == 1){
+            return 2 * hierarchy.getRoot().getMaxToRoot();
+        }
         Map<HierarchyNode, HierarchyNode> ancestors = new HashMap<>();
         Map<HierarchyNode, Double> cache = new HashMap<>();
         double distance = 0.0;
@@ -201,6 +204,9 @@ public class HierarchyBuilder{
     }
 
     private double getEdgeWeight(HierarchyNode n1, HierarchyNode n2) {
+        if(n1 == hierarchy.getRoot() || n2 == hierarchy.getRoot()){
+            return hierarchy.getRoot().getMaxToRoot();
+        }
         long[] diff = questionRepository.getQuestionsByTagDifference(n1.getName(), n2.getName());
         return Math.exp(-1 * (Math.pow(diff[0], 2) + Math.pow(diff[1], 2)) / Math.pow(radiusParameter,2));
     }
