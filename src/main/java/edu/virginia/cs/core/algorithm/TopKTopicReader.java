@@ -32,7 +32,7 @@ public class TopKTopicReader {
     public static void main(String[] args) throws Exception {
         TopKTopicReader reader = new TopKTopicReader();
         List<Topic> topicList = reader.getTopKTopic();
-        topicList.forEach(System.out::println);
+        //topicList.forEach(System.out::println);
         ObjectOutputStream oos = null;
         try {
             oos = new ObjectOutputStream(new FileOutputStream("topic.dat"));
