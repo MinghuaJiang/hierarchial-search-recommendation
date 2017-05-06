@@ -14,7 +14,7 @@ public class HierarchyNode implements Serializable {
     private int level;
     private HierarchyNode parentNode;
     private List<HierarchyNode> children;
-    private double weightToParent;
+    private double maxToRoot;
 
     public HierarchyNode() {
         this(null);
@@ -23,14 +23,6 @@ public class HierarchyNode implements Serializable {
     public HierarchyNode(Tag node) {
         this.node = node;
         this.children = new ArrayList<>();
-    }
-
-    public double getWeightToParent() {
-        return weightToParent;
-    }
-
-    public void setWeightToParent(double weight2Parent) {
-        this.weightToParent = weight2Parent;
     }
 
     public HierarchyNode getParentNode() {
@@ -68,5 +60,13 @@ public class HierarchyNode implements Serializable {
 
     public double getScore(){
         return this.node.getScore();
+    }
+
+    public void setMaxToRoot(double maxToRoot) {
+        this.maxToRoot = maxToRoot;
+    }
+
+    public double getMaxToRoot() {
+        return maxToRoot;
     }
 }

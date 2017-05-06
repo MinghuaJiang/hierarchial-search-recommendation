@@ -26,13 +26,13 @@ public class HierarchyBuilder{
 
     private Hierarchy hierarchy;
     private String hierarchyFile;
-    private List<List<HierarchyNode>> buckets;
+    private LinkedHashMap<Integer, List<HierarchyNode>> buckets;
     private double epsilon = 0.7;
     private double radiusParameter = 10;
 
     public HierarchyBuilder(String hierarchyFile) {
         this.hierarchyFile = hierarchyFile;
-        this.buckets = new ArrayList<>();
+        this.buckets = new LinkedHashMap<>();
     }
 
     public void buildHierarchy() throws Exception {
@@ -56,15 +56,27 @@ public class HierarchyBuilder{
         System.out.println("start to build hierarchy");
         Tag top = tags.pollFirst();
         hierarchy = new Hierarchy();
+        if(!buckets.containsKey(0)){
+            buckets.put(0, new ArrayList<HierarchyNode>());
+        }
+        buckets.get(0).add(hierarchy.getRoot());
         HierarchyNode firstNode = new HierarchyNode(top);
         hierarchy.addNode(hierarchy.getRoot(), firstNode);
-        buckets.get(firstNode.getLevel()).add(firstNode);
-        double rootToFirstLevel = getMaxRootToFirstLevel();
-        if (firstNode.getLevel() == 1) {
-            firstNode.setWeightToParent(rootToFirstLevel);
+        if(!buckets.containsKey(firstNode.getLevel())){
+            buckets.put(firstNode.getLevel(), new ArrayList<HierarchyNode>());
         }
+        buckets.get(firstNode.getLevel()).add(firstNode);
+
+        if (firstNode.getLevel() == 1) {
+            hierarchy.getRoot().setMaxToRoot(getMaxRootToFirstLevel());
+        }
+        int count = 0;
         while (tags.size() > 0) {
             Tag t = tags.pollFirst();
+            count++;
+            if(count % 2 == 0){
+                System.out.println(count + " tag passed");
+            }
             HierarchyNode tPrime = new HierarchyNode(t);
             List<HierarchyNode> candidateParents = getCandidateParents(hierarchy.getDepth());
             HierarchyNode newParent = new HierarchyNode();
@@ -77,10 +89,13 @@ public class HierarchyBuilder{
                 }
             }
             hierarchy.addNode(newParent, tPrime);
+            if(!buckets.containsKey(tPrime.getLevel())){
+                buckets.put(tPrime.getLevel(), new ArrayList<HierarchyNode>());
+            }
             buckets.get(tPrime.getLevel()).add(tPrime);
-            rootToFirstLevel = getMaxRootToFirstLevel();
+
             if (tPrime.getLevel() == 1) {
-                tPrime.setWeightToParent(rootToFirstLevel);
+                hierarchy.getRoot().setMaxToRoot(getMaxRootToFirstLevel());
             }
         }
         ObjectOutputStream oos = null;
@@ -116,7 +131,7 @@ public class HierarchyBuilder{
 
     private double getMinCostDiff(HierarchyNode t, Hierarchy hierarchy) {
         List<Double> costFunction = new ArrayList<>();
-        for (int i = 0; i < buckets.size(); i++) {
+        for (int i : buckets.keySet()) {
             for (int j = 0; j < buckets.get(i).size(); j++) {
                 double temp = getMinDistance(t, buckets.get(i).get(j)) + this.epsilon * hierarchy.getDepth() / hierarchy.getTotalNodes();
                 costFunction.add(temp);
@@ -126,30 +141,39 @@ public class HierarchyBuilder{
     }
 
     private double getMinDistance(HierarchyNode n1, HierarchyNode n2) {
-        HierarchyNode commonParent = getCommonParent(n1, n2);
-        double minDistance = 0;
-        while (n1.getParentNode() != commonParent) {
-            minDistance += getEdgeWeight(n1, n1.getParentNode());
+        Map<HierarchyNode, HierarchyNode> ancestors = new HashMap<>();
+        Map<HierarchyNode, Double> cache = new HashMap<>();
+        double distance = 0.0;
+        cache.put(n1, 0.0);
+        while (n1.getParentNode() != null) {
+            ancestors.put(n1, n1.getParentNode());
+            distance += getEdgeWeight(n1, n1.getParentNode());
+            cache.put(n1.getParentNode(), distance);
             n1 = n1.getParentNode();
         }
-        minDistance += getEdgeWeight(n1, commonParent);
-        while (n2.getParentNode() != commonParent) {
-            minDistance += getEdgeWeight(n2, n2.getParentNode());
+        double distance_d2 = 0.0;
+        while (n2.getParentNode() != null && !ancestors.containsKey(n2)) {
+            distance_d2 += getEdgeWeight(n2, n2.getParentNode());
             n2 = n2.getParentNode();
         }
-        minDistance += getEdgeWeight(n2, commonParent);
-        return minDistance;
+        return distance_d2 + cache.getOrDefault(n2, 0.0);
     }
 
     private double getMaxRootToFirstLevel() {
         List<HierarchyNode> realRoots = hierarchy.getRoot().getChildren();
-        List<Double> listOfDistance = new ArrayList<>();
-        for (int i = 0; i < realRoots.size(); i++) {
-            for (int j = 0; j < realRoots.size(); j++) {
-                listOfDistance.add(getEdgeWeight(realRoots.get(i), realRoots.get(j)));
-            }
+        if(realRoots.size() <= 1){
+            return 0;
         }
-        return Collections.max(listOfDistance);
+        if(realRoots.size() == 2){
+            return getEdgeWeight(realRoots.get(0), realRoots.get(1));
+        }
+        double maxToRoot = hierarchy.getRoot().getMaxToRoot();
+
+        HierarchyNode newNode = realRoots.get(realRoots.size() - 1);
+        for (int i = 0; i < realRoots.size() - 1; i++) {
+            maxToRoot = Math.max(getEdgeWeight(realRoots.get(i), newNode), maxToRoot);
+        }
+        return maxToRoot;
     }
 
     public List<HierarchyNode> getCandidateParents(int depth) {
@@ -167,19 +191,6 @@ public class HierarchyBuilder{
         long[] diff = questionRepository.getQuestionsByTagDifference(n1.getName(), n2.getName());
         return Math.exp(-1 * (Math.pow(diff[0], 2) + Math.pow(diff[1], 2)) / Math.pow(radiusParameter,2));
     }
-
-    private HierarchyNode getCommonParent(HierarchyNode n1, HierarchyNode n2) {
-        Map<HierarchyNode, HierarchyNode> ancestors = new HashMap<>();
-        while (n1.getParentNode() != null) {
-            ancestors.put(n1, n1.getParentNode());
-            n1 = n1.getParentNode();
-        }
-        while (!ancestors.containsKey(n2)) {
-            n2 = ancestors.get(n2);
-        }
-        return n2;
-    }
-
 
     private List<Topic> generateTopKTopics(int k) throws Exception {
         List<Topic> result = new ArrayList<Topic>();

@@ -73,7 +73,7 @@ public class TagRepositoryImpl implements TagSearch{
             tags.add(tag);
             count++;
             if(count % 100 == 0){
-                System.out.println(count + "tags passed");
+                System.out.println(count + " tags passed");
             }
         }
         for(Tag tag: tags){
