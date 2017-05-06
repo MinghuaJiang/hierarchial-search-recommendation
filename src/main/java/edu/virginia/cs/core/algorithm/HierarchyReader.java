@@ -44,7 +44,7 @@ public class HierarchyReader {
             Map<String, Integer> node = new HashMap<>();
             node.put(current.getName(), index++);
             nodes.add(node);
-            each.put("src", node.get(current.getName()));
+            each.put("source", node.get(current.getName()));
             current = current.getParentNode();
             node = new HashMap<>();
             node.put(current.getName(), index++);
@@ -75,7 +75,7 @@ public class HierarchyReader {
                     nodes.add(nodeeach);
 
                     Map<String, Integer> each = new HashMap<String, Integer>();
-                    each.put("src", rootnode.get(node.getName()));
+                    each.put("source", rootnode.get(node.getName()));
                     each.put("target", nodeeach.get(child.getName()));
                     result.add(each);
                     queue.offer(child);
