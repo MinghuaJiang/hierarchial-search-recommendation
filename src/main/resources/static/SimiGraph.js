@@ -95,9 +95,6 @@ d3.json("/graph.json", function(error, json) {
                  .attr("class", "textBox")
                  .attr("border-radius", "10px")
                  .attr("border","2px solid #73AD21")
-                 // .attr("width", function (x) {
-                 //     return x.questionTitle.getComputedTextLength;
-                 // })
                  .attr("width", "100px")
                  .attr("height", "25px")
                  .attr("x", function () {
