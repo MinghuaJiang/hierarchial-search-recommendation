@@ -1,6 +1,10 @@
 package edu.virginia.cs.solr.model;
 
+import edu.virginia.cs.solr.repository.QuestionRepository;
+import edu.virginia.cs.solr.repository.TagRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
@@ -15,6 +19,9 @@ import java.util.List;
 @XmlRootElement(name = "row")
 @SolrDocument(solrCoreName = "tags")
 public class Tag implements Serializable {
+    @Transient
+    @Autowired
+    private QuestionRepository repository;
     @Id
     @Indexed(name = "id")
     private String id;
@@ -67,8 +74,8 @@ public class Tag implements Serializable {
         return score;
     }
 
-    public void calculateITScore(List<Topic> topics, List<Tag> tags) {
-        double[] topic_pro_arr = getTopKTopicProbArr(topics, tags);
+    public void calculateITScore(List<Topic> topics, int tagSize) {
+        double[] topic_pro_arr = getTopKTopicProbArr(topics, tagSize);
         this.score = (tagDistinctCount * Math.log(tagRawCount + 1)) * this.getTagEntropy(topic_pro_arr);
     }
 
@@ -76,18 +83,18 @@ public class Tag implements Serializable {
         this.score = this.score / maxScore;
     }
 
-    private double[] getTopKTopicProbArr(List<Topic> topics, List<Tag> tags) {
+    private double[] getTopKTopicProbArr(List<Topic> topics, int tagSize) {
         double[] topicProb = new double[topics.size()];
 
         Topic[] topKTopicsArr = topics.toArray(new Topic[0]);
         for (int i = 0; i < topics.size(); i++) {
-            topicProb[i] = this.co_occurrence(topKTopicsArr[i]) / tags.size();
+            topicProb[i] = this.co_occurrence(topKTopicsArr[i]) / tagSize;
         }
         return topicProb;
     }
 
     public long co_occurrence(Topic topic) {
-        return 1;
+        return  repository.getQuestionsCocurrence(tagName, topic.getTopicName());
     }
 
     private double getTagEntropy(double[] topic_pro_arr) {

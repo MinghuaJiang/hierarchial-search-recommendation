@@ -1,6 +1,7 @@
 package edu.virginia.cs.solr.repository;
 
 import edu.virginia.cs.solr.model.Tag;
+import edu.virginia.cs.solr.model.TagComparator;
 import edu.virginia.cs.solr.model.Topic;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,25 +63,17 @@ public class TagRepositoryImpl implements TagSearch{
 
     @Override
     public TreeSet<Tag> getRankingTags(List<Topic> topK) throws IOException, SolrServerException {
-        TreeSet<Tag> tags = new TreeSet<>(new Comparator<Tag>() {
-            @Override
-            public int compare(Tag t1, Tag t2) {
-                if(t2.getScore() - t1.getScore() <= 0){
-                    return 1;
-                }else return -1;
-            }
-        });
+        TreeSet<Tag> tags = new TreeSet<>(new TagComparator());
         List<Tag> lists = getAllTags();
         double maxScore = 0;
         for(Tag tag: lists){
             tag.setTagRawCount(questionRepository.getTotalTermFrequency(tag.getTagName()));
-            tag.calculateITScore(topK, lists);
+            tag.calculateITScore(topK, lists.size());
             maxScore = Math.max(maxScore, tag.getScore());
             tags.add(tag);
         }
         for(Tag tag: tags){
             tag.normalizeScore(maxScore);
-
         }
         return tags;
     }

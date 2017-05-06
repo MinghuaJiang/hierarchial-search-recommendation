@@ -24,6 +24,8 @@ public interface QuestionSearch {
 
     public long[] getQuestionsByTagDifference(String tag1, String tag2);
 
+    public long getQuestionsCocurrence(String tag1, String tag2);
+
     public int getTotalTermFrequency(String tagName) throws IOException, SolrServerException;
 
     public Map<String,Object> recommendNode(String searchTerm, int nodeCount) throws Exception;

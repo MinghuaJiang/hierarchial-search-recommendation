@@ -78,6 +78,14 @@ public class QuestionRepositoryImpl implements QuestionSearch {
     }
 
     @Override
+    public long getQuestionsCocurrence(String tag1, String tag2) {
+        Criteria criteria = Criteria.where("tagName_ss").expression(tag1).and("tagName_ss").expression(tag2);
+        SimpleQuery query = new SimpleQuery(criteria);
+        long result = template.count(Question.class.getAnnotation(SolrDocument.class).solrCoreName(), query);
+        return result;
+    }
+
+    @Override
     public Map<String, Double> getTermFrequency(String tagName, int count) throws IOException, SolrServerException {
         SolrQuery query = new SolrQuery();
         String key = "termfreq('body_t'," + tagName + ")";
@@ -242,10 +250,9 @@ public class QuestionRepositoryImpl implements QuestionSearch {
             }
         }
         while (!queue.isEmpty()) {
+            Question question = queue.poll();
+            question.setSearchScore(question.getScore());
             result.add(0, queue.poll());
-        }
-        for(int i = 0; i < result.size();i++){
-            result.get(i).setSearchScore(result.get(0).getScore() / result.get(i).getScore());
         }
 
         return result;
