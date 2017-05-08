@@ -36,7 +36,7 @@ var simulation = d3.forceSimulation()
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width/2, height/2));
 
-d3.json("/graph.json", function(error, json) {
+d3.json("/Hierarchy.json", function(error, json) {
     if (error) throw error;
 
     link = link.data(json.links).enter().append("line");
