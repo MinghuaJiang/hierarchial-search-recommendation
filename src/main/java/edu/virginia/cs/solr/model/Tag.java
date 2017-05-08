@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by cutehuazai on 5/1/17.
@@ -71,7 +72,7 @@ public class Tag implements Serializable {
         return score;
     }
 
-    public void calculateITScore(List<Topic> topics, int tagSize, QuestionRepository repository) {
+    public void calculateITScore(Set<Topic> topics, int tagSize, QuestionRepository repository) {
         double[] topic_pro_arr = getTopKTopicProbArr(topics, tagSize, repository);
         this.score = (tagDistinctCount * Math.log(tagRawCount + 1)) * this.getTagEntropy(topic_pro_arr);
     }
@@ -80,7 +81,7 @@ public class Tag implements Serializable {
         this.score = this.score / maxScore;
     }
 
-    private double[] getTopKTopicProbArr(List<Topic> topics, int tagSize, QuestionRepository repository) {
+    private double[] getTopKTopicProbArr(Set<Topic> topics, int tagSize, QuestionRepository repository) {
         double[] topicProb = new double[topics.size()];
 
         Topic[] topKTopicsArr = topics.toArray(new Topic[0]);

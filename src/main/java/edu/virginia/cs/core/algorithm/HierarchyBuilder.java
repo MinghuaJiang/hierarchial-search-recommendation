@@ -1,7 +1,5 @@
 package edu.virginia.cs.core.algorithm;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import edu.virginia.cs.core.model.Hierarchy;
 import edu.virginia.cs.core.model.HierarchyNode;
 import edu.virginia.cs.solr.model.Question;
@@ -52,7 +50,7 @@ public class HierarchyBuilder{
             }
         }
         System.out.println("start to build k topics");
-        List<Topic> topics = generateTopKTopics(100);
+        Set<Topic> topics = generateTopKTopics(100);
         System.out.println("start to build ranking tags");
         TreeSet<Tag> tags = getRankingTags(topics);
         System.out.println("start to build hierarchy");
@@ -124,7 +122,7 @@ public class HierarchyBuilder{
         }
     }
 
-    private TreeSet<Tag> getRankingTags(List<Topic> topics) throws Exception {
+    private TreeSet<Tag> getRankingTags(Set<Topic> topics) throws Exception {
         File file = new File("ranking.dat");
         if (file.exists()) {
             ObjectInputStream ois = null;
@@ -213,14 +211,15 @@ public class HierarchyBuilder{
         return Math.exp(-1 * (Math.pow(diff[0], 2) + Math.pow(diff[1], 2)) / Math.pow(radiusParameter,2));
     }
 
-    private List<Topic> generateTopKTopics(int k) throws Exception {
-        List<Topic> result = new ArrayList<Topic>();
+    private Set<Topic> generateTopKTopics(int k) throws Exception {
+        Set<Topic> result = new HashSet<Topic>();
         File file = new File("topic.dat");
         if (file.exists()) {
             ObjectInputStream ois = null;
             try {
                 ois = new ObjectInputStream(new FileInputStream(file));
-                result = (List<Topic>) ois.readObject();
+                result = new HashSet<Topic>();
+                result.addAll((List<Topic>) ois.readObject());
                 return result;
             } finally {
                 if (ois != null) {
@@ -251,8 +250,6 @@ public class HierarchyBuilder{
             if (topics.contains(topic)) {
                 continue;
             }
-
-
             topics.add(topic);
             if (queue.size() < k) {
                 queue.offer(topic);
@@ -270,7 +267,6 @@ public class HierarchyBuilder{
             for (Question question : questions) {
                 if(count % 10000 == 0){
                     System.out.println(count + " question passed");
-
                     ObjectOutputStream oos = null;
                     try {
                         oos = new ObjectOutputStream(new FileOutputStream("top_k_queue.dat"));

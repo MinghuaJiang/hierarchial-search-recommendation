@@ -6,6 +6,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 
@@ -15,5 +16,5 @@ import java.util.TreeSet;
 public interface TagSearch {
     public Tag getTagByName(String tagName);
     public List<Tag> getAllTags();
-    public TreeSet<Tag> getRankingTags(List<Topic> topK) throws IOException, SolrServerException;
+    public TreeSet<Tag> getRankingTags(Set<Topic> topK) throws IOException, SolrServerException;
 }

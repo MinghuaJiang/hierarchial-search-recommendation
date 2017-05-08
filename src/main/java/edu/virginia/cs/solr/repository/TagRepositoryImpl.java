@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -61,12 +62,15 @@ public class TagRepositoryImpl implements TagSearch{
     }
 
     @Override
-    public TreeSet<Tag> getRankingTags(List<Topic> topK) throws IOException, SolrServerException {
+    public TreeSet<Tag> getRankingTags(Set<Topic> topK) throws IOException, SolrServerException {
         TreeSet<Tag> tags = new TreeSet<>(new TagComparator());
         List<Tag> lists = getAllTags();
         double maxScore = 0;
         int count = 0;
         for(Tag tag: lists){
+            if(!topK.contains(new Topic(tag.getTagName(), tag.getTagDistinctCount()))){
+                continue;
+            }
             tag.setTagRawCount(questionRepository.getTotalTermFrequency(tag.getTagName()));
             tag.calculateITScore(topK, lists.size(), questionRepository);
             maxScore = Math.max(maxScore, tag.getScore());
