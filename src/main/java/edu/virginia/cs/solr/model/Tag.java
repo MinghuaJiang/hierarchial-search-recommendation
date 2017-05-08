@@ -1,10 +1,7 @@
 package edu.virginia.cs.solr.model;
 
 import edu.virginia.cs.solr.repository.QuestionRepository;
-import edu.virginia.cs.solr.repository.TagRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
@@ -100,7 +97,7 @@ public class Tag implements Serializable {
         for (int i = 0; i < topic_pro_arr.length;i++){
             entropy += topic_pro_arr[i] * Math.log(topic_pro_arr[i]);
         }
-        return entropy;
+        return entropy * (-1);
     }
 
     @Override

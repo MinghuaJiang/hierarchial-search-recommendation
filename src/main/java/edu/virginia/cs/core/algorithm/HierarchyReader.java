@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.virginia.cs.core.model.Hierarchy;
 import edu.virginia.cs.core.model.HierarchyNode;
-import org.apache.commons.collections.map.HashedMap;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
@@ -16,7 +15,7 @@ import java.util.*;
 public class HierarchyReader {
     public Hierarchy readHierachy() throws Exception {
         ObjectInputStream ois = null;
-        ois = new ObjectInputStream(new FileInputStream("hierarchy.dat"));
+        ois = new ObjectInputStream(new FileInputStream("hierarchy-400.dat"));
         try {
             Hierarchy hierarchy = (Hierarchy) ois.readObject();
 
