@@ -74,11 +74,8 @@ public class HierarchyBuilder{
         while (tags.size() > 0) {
             Tag t = tags.pollFirst();
             count++;
-            if(count % 2 == 0){
+            if(count % 200 == 0){
                 System.out.println(count + " tag passed");
-            }
-
-            if(count == 200){
                 ObjectOutputStream oos = null;
                 try {
                     oos = new ObjectOutputStream(new FileOutputStream(new File(hierarchyFile)));
