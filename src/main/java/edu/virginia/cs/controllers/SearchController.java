@@ -36,11 +36,6 @@ public class SearchController {
     public String recommendTopQuestionByTagName(@PathVariable("tag") String tag, @PathVariable("count")int count) throws Exception{
         List<Question> result = repository.recommendQuestionsByTag(tag, count);
         Gson gson = new GsonBuilder().create();
-        try (FileWriter file = new FileWriter("/recommendation.json")) {
-            file.write(result.toString());
-            System.out.println("Successfully Copied JSON Object to File...");
-            System.out.println("\nJSON Object: " + result);
-        }
         return gson.toJson(result);
     }
 
@@ -48,6 +43,11 @@ public class SearchController {
     public String recommendTags(@PathVariable("term") String term, @PathVariable("count")int count) throws Exception{
         Map<String,Object> result = repository.recommendNode(term, count);
         Gson gson = new GsonBuilder().create();
+        try (FileWriter file = new FileWriter("recommendation.json")) {
+            file.write(result.toString());
+            System.out.println("Successfully Copied JSON Object to File...");
+            System.out.println("\nJSON Object: " + result);
+        }
         return gson.toJson(result);
     }
 }
