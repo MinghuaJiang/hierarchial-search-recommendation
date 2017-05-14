@@ -7,12 +7,11 @@ import edu.virginia.cs.solr.model.Question;
 import edu.virginia.cs.solr.model.QuestionResult;
 import edu.virginia.cs.solr.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +36,11 @@ public class SearchController {
     public String recommendTopQuestionByTagName(@PathVariable("tag") String tag, @PathVariable("count")int count) throws Exception{
         List<Question> result = repository.recommendQuestionsByTag(tag, count);
         Gson gson = new GsonBuilder().create();
+        try (FileWriter file = new FileWriter("/recommendation.json")) {
+            file.write(result.toString());
+            System.out.println("Successfully Copied JSON Object to File...");
+            System.out.println("\nJSON Object: " + result);
+        }
         return gson.toJson(result);
     }
 

@@ -15,7 +15,7 @@ import java.util.*;
 public class HierarchyReader {
     public Hierarchy readHierachy() throws Exception {
         ObjectInputStream ois = null;
-        ois = new ObjectInputStream(new FileInputStream("hierarchy-400.dat"));
+        ois = new ObjectInputStream(new FileInputStream("hierarchy.dat"));
         try {
             Hierarchy hierarchy = (Hierarchy) ois.readObject();
 

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by VINCENTWEN on 5/1/17.
  */
-public class HierarchyNode implements Serializable {
+public class   HierarchyNode implements Serializable {
     private Tag node;
     private int level;
     private HierarchyNode parentNode;

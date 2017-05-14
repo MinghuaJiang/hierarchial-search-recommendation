@@ -11,7 +11,7 @@ $('#real-search').keypress(function(event) {
         event.preventDefault();
         onSearch();
     }
-})
+});
 
 $("#search_button").click(onSearch);
 

@@ -145,7 +145,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 
 
 /*recommendGraph css*/
-.bar { fill: steelblue; }
+.bar { fill: yellow; }
 
 /*.d3-tip {*/
     /*line-height: 1;*/

@@ -35,89 +35,119 @@ public class HierarchyBuilder{
         this.buckets = new LinkedHashMap<>();
     }
 
-    public void buildHierarchy() throws Exception {
-        File file = new File(hierarchyFile);
-        if (file.exists()) {
-            ObjectInputStream ois = null;
-            ois = new ObjectInputStream(new FileInputStream(file));
-            try {
-                hierarchy = (Hierarchy) ois.readObject();
-                return;
-            } finally {
-                if (ois != null) {
-                    ois.close();
-                }
-            }
-        }
-        System.out.println("start to build k topics");
+    public void buildHierarchy() throws Exception{
+        System.out.println("build first level: real roots");
         Set<Topic> topics = generateTopKTopics(100);
-        System.out.println("start to build ranking tags");
         TreeSet<Tag> tags = getRankingTags(topics);
-        System.out.println("start to build hierarchy");
+        List<HierarchyNode> HNodeList = new ArrayList<>();
         Tag top = tags.pollFirst();
-        hierarchy = new Hierarchy();
-        if(!buckets.containsKey(0)){
-            buckets.put(0, new ArrayList<HierarchyNode>());
-        }
-        buckets.get(0).add(hierarchy.getRoot());
         HierarchyNode firstNode = new HierarchyNode(top);
+
+        hierarchy = new Hierarchy();
         hierarchy.addNode(hierarchy.getRoot(), firstNode);
-        if(!buckets.containsKey(firstNode.getLevel())){
-            buckets.put(firstNode.getLevel(), new ArrayList<HierarchyNode>());
-        }
-        buckets.get(firstNode.getLevel()).add(firstNode);
-
-        if (firstNode.getLevel() == 1) {
-            hierarchy.getRoot().setMaxToRoot(getMaxRootToFirstLevel());
-        }
-        int count = 0;
-        while (tags.size() > 0) {
-            Tag t = tags.pollFirst();
-            count++;
-            if(count % 200 == 0){
-                System.out.println(count + " tag passed");
-                ObjectOutputStream oos = null;
-                try {
-                    oos = new ObjectOutputStream(new FileOutputStream(new File(hierarchyFile)));
-                    oos.writeObject(hierarchy);
-                } finally {
-                    if (oos != null) {
-                        oos.close();
-                    }
+        HNodeList.add(firstNode);
+        //insert at the minimal parent
+        for(Tag tag : tags){
+            HierarchyNode newNode = new HierarchyNode(tag);
+            HierarchyNode minParent = null;
+            double minSimilarity = Double.MAX_VALUE;
+            for(HierarchyNode node : HNodeList){
+                double similarity = getEdgeWeight(node, newNode);
+                if(similarity < minSimilarity){
+                    minSimilarity = similarity;
+                    minParent = node;
                 }
             }
-
-            HierarchyNode tPrime = new HierarchyNode(t);
-            List<HierarchyNode> candidateParents = getCandidateParents(hierarchy.getDepth());
-            HierarchyNode newParent = null;
-            double minDiff = Double.MAX_VALUE;
-            for (HierarchyNode tk : candidateParents) {
-                double diff = getMinCostDiff(tk, hierarchy) + getMinDistance(tk, tPrime);
-                if (diff < minDiff) {
-                    minDiff = diff;
-                    newParent = tk;
-                }
-            }
-            hierarchy.addNode(newParent, tPrime);
-            if(!buckets.containsKey(tPrime.getLevel())){
-                buckets.put(tPrime.getLevel(), new ArrayList<HierarchyNode>());
-            }
-            buckets.get(tPrime.getLevel()).add(tPrime);
-
-            if (tPrime.getLevel() == 1) {
-                hierarchy.getRoot().setMaxToRoot(getMaxRootToFirstLevel());
-            }
+            hierarchy.addNode(minParent, newNode);
+            HNodeList.add(newNode);
+            System.out.println(minParent.getName());
         }
-        ObjectOutputStream oos = null;
-        try {
-            oos = new ObjectOutputStream(new FileOutputStream(new File(hierarchyFile)));
-            oos.writeObject(hierarchy);
-        } finally {
-            if (oos != null) {
-                oos.close();
-            }
-        }
+//        System.out.println("finished building");
     }
+
+//    public void buildHierarchy() throws Exception {
+//        File file = new File(hierarchyFile);
+//        if (file.exists()) {
+//            ObjectInputStream ois = null;
+//            ois = new ObjectInputStream(new FileInputStream(file));
+//            try {
+//                hierarchy = (Hierarchy) ois.readObject();
+//                return;
+//            } finally {
+//                if (ois != null) {
+//                    ois.close();
+//                }
+//            }
+//        }
+//        System.out.println("start to build k topics");
+//        Set<Topic> topics = generateTopKTopics(100);
+//        System.out.println("start to build ranking tags");
+//        TreeSet<Tag> tags = getRankingTags(topics);
+//        System.out.println("start to build hierarchy");
+//        Tag top = tags.pollFirst();
+//        hierarchy = new Hierarchy();
+//        if(!buckets.containsKey(0)){
+//            buckets.put(0, new ArrayList<HierarchyNode>());
+//        }
+//        buckets.get(0).add(hierarchy.getRoot());
+//        HierarchyNode firstNode = new HierarchyNode(top);
+//        hierarchy.addNode(hierarchy.getRoot(), firstNode);
+//        if(!buckets.containsKey(firstNode.getLevel())){
+//            buckets.put(firstNode.getLevel(), new ArrayList<HierarchyNode>());
+//        }
+//        buckets.get(firstNode.getLevel()).add(firstNode);
+//
+//        if (firstNode.getLevel() == 1) {
+//            hierarchy.getRoot().setMaxToRoot(getMaxRootToFirstLevel());
+//        }
+//        int count = 0;
+//        while (tags.size() > 0) {
+//            Tag t = tags.pollFirst();
+//            count++;
+//            if(count % 200 == 0){
+//                System.out.println(count + " tag passed");
+//                ObjectOutputStream oos = null;
+//                try {
+//                    oos = new ObjectOutputStream(new FileOutputStream(new File(hierarchyFile)));
+//                    oos.writeObject(hierarchy);
+//                } finally {
+//                    if (oos != null) {
+//                        oos.close();
+//                    }
+//                }
+//            }
+//
+//            HierarchyNode tPrime = new HierarchyNode(t);
+//            List<HierarchyNode> candidateParents = getCandidateParents(hierarchy.getDepth());
+//            HierarchyNode newParent = null;
+//            double minDiff = Double.MAX_VALUE;
+//            for (HierarchyNode tk : candidateParents) {
+//                double diff = getMinCostDiff(tk, hierarchy) + getMinDistance(tk, tPrime);
+//                if (diff < minDiff) {
+//                    minDiff = diff;
+//                    newParent = tk;
+//                }
+//            }
+//            hierarchy.addNode(newParent, tPrime);
+//            if(!buckets.containsKey(tPrime.getLevel())){
+//                buckets.put(tPrime.getLevel(), new ArrayList<HierarchyNode>());
+//            }
+//            buckets.get(tPrime.getLevel()).add(tPrime);
+//
+//            if (tPrime.getLevel() == 1) {
+//                hierarchy.getRoot().setMaxToRoot(getMaxRootToFirstLevel());
+//            }
+//        }
+//        ObjectOutputStream oos = null;
+//        try {
+//            oos = new ObjectOutputStream(new FileOutputStream(new File(hierarchyFile)));
+//            oos.writeObject(hierarchy);
+//        } finally {
+//            if (oos != null) {
+//                oos.close();
+//            }
+//        }
+//    }
 
     private TreeSet<Tag> getRankingTags(Set<Topic> topics) throws Exception {
         File file = new File("ranking.dat");
@@ -143,7 +173,8 @@ public class HierarchyBuilder{
         List<Double> costFunction = new ArrayList<>();
         for (int i : buckets.keySet()) {
             for (int j = 0; j < buckets.get(i).size(); j++) {
-                double temp = getMinDistance(t, buckets.get(i).get(j)) + this.epsilon * hierarchy.getDepth() / hierarchy.getTotalNodes();
+//                double temp = getMinDistance(t, buckets.get(i).get(j)) + this.epsilon * hierarchy.getDepth() / hierarchy.getTotalNodes();
+                double temp = getMinDistance(t, buckets.get(i).get(j));
                 costFunction.add(temp);
             }
         }

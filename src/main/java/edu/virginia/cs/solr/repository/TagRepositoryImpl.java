@@ -68,9 +68,10 @@ public class TagRepositoryImpl implements TagSearch{
         double maxScore = 0;
         int count = 0;
         for(Tag tag: lists){
-            if(!topK.contains(new Topic(tag.getTagName(), tag.getTagDistinctCount()))){
-                continue;
-            }
+            // make topic = tag
+//            if(!topK.contains(new Topic(tag.getTagName(), tag.getTagDistinctCount()))){
+//                continue;
+//            }
             tag.setTagRawCount(questionRepository.getTotalTermFrequency(tag.getTagName()));
             tag.calculateITScore(topK, lists.size(), questionRepository);
             maxScore = Math.max(maxScore, tag.getScore());
