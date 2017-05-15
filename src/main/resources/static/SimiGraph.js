@@ -58,121 +58,109 @@ d3.json("/graph.json", function(error, json) {
         showRecommendGraph(d);
     });
 
-    // node.on("click", function (d) {
-    //     $('#numOfNodes li').on('click', function(){
-    //         count = $(this).text();
-    //     });
-    //     console.log(count);
-    //
-    //     $.get("/recommendation/question/"+ d.name +"/" + count).done(function (obj) {
-    //         node.attr("visibility","hidden");
-    //         link.attr("visibility","hidden");
-    //         console.log("print d" + d);
-    //         var recommend = JSON.parse(obj);
-    //
-    //         var pack = d3.pack()
-    //             .size([400,400])
-    //             .padding(10);
-    //
-    //         var root = d3.hierarchy(recommend)
-    //             .sum(function (d) {
-    //                 return +d[""];
-    //             })
-    //             .sort(function (a,b) {
-    //                 d3.ascending(a.value, b.value);
-    //             });
-    //
-    //         var descendants = pack(root);
-    //
-    //         var snail = relationGraph
-    //             .append("g")
-    //             .attr("class", "recommendPage");
-    //
-    //         var descendant = snail.selectAll(".snail")
-    //             .data(descendants.children)
-    //             .enter().append("g")
-    //             .attr("transform", function (d) {
-    //                 return "translate(" + d.x + "," + d.y + ")";
-    //             })
-    //             .on("mouseover", showhide)
-    //             .on("mouseout", showhide);
-    //
-    //         snail.append("circle")
-    //             .attr("r", function (d) {
-    //                 return d.r;
-    //             })
-    //             .attr("class", function (d) {
-    //                 return d.data[]
-    //             });
-    //         snail.append("text")
-    //             .text(function (d) {
-    //                 return d.data[""] + ", " + d.data[""];
-    //             });
-    //
-    //
-    //
-    //         // var recommendWindow = relationGraph
-    //         //  .append("g")
-    //         //  .attr("class", "recommendPage");
-    //         //
-    //         // var centralTag = recommendWindow
-    //         //  .append("g")
-    //         //  .attr("class", "centralTag")
-    //         //  .attr("transform", "translate(250,300)");
-    //         //
-    //         // var tag = centralTag
-    //         //  .append("circle")
-    //         //  .attr("r", 100)
-    //         //  .attr("fill", "#ffccff");
-    //         //
-    //         // var tagName = centralTag
-    //         //  .append("text")
-    //         //  .attr("dx", -30)
-    //         //  .attr("dy", ".35em")
-    //         //  .attr("font-size", "20px")
-    //         //  .attr("font-color", "white")
-    //         //  .text(function () {
-    //         //      return d.name;
-    //         //  });
-    //         //
-    //         // console.log("checking format:" + recommend);
-    //         //
-    //         // var recommend = recommendWindow
-    //         //  .selectAll("text")
-    //         //  .data(recommend)
-    //         //  .enter()
-    //         //  .append("text")
-    //         //  .attr("class", "textBox")
-    //         //  .attr("border-radius", "10px")
-    //         //  .attr("border","2px solid #73AD21")
-    //         //  .attr("width", "100px")
-    //         //  .attr("height", "25px")
-    //         //  .attr("x", function () {
-    //         //      return Math.random() * (width - 50);
-    //         //  })
-    //         //  .attr("y", function () {
-    //         //      return Math.random() * (height - 50);
-    //         //  })
-    //         //  .attr("text-overflow", "inherit")
-    //         //  .attr("overflow","hidden")
-    //         //  .text(function (x) {
-    //         //      console.log(x.questionTitle);
-    //         //      return x["questionTitle"];
-    //         //  });
-    //         //
-    //         // // $(document).ready(function(){
-    //         // //     $('.textBox').jqFloat();
-    //         // // });
-    //         //
-    //         // var force = d3.forceSimulation()
-    //         //  .force("link", d3.forceLink())
-    //         //  .force("charge", d3.forceManyBody())
-    //         //  .force("center", d3.forceCenter(width/2, height/2));
-    //         //
-    //         // force.nodes(recommend)
-    //         //  .on("tick", ticked);
-    //     });
-    // });
+    // three event wish to bound to same node, not possible
+    node.on("dblclick", function (d) {
+        node.attr("visibility","hidden");
+        link.attr("visibility","hidden");
+
+        $.get("/recommendation/question/"+ d.name +"/" + count).done(function (obj){
+            json = obj;
+            var recommendWindow = relationGraph
+                .append("g")
+                .attr("class", "recommendPage");
+
+            var centralTag = recommendWindow
+                .append("g")
+                .attr("class", "centralTag")
+                .attr("transform", "translate(250,300)");
+
+            var tag = centralTag
+                .append("circle")
+                .attr("r", 100)
+                .attr("fill", "#FF66FF");
+
+            var tagName = centralTag
+                .append("text")
+                .attr("dx", -30)
+                .attr("dy", ".35em")
+                .attr("font-size", "20px")
+                .attr("font-color", "white")
+                .text(function () {
+                    return d.name;
+                });
+
+            var recommend = recommendWindow
+                .selectAll("text")
+                .data(json)
+                .enter()
+                .append("text")
+                .attr("class", "textBox")
+                .attr("border-radius", "10px")
+                .attr("border","2px solid #73AD21")
+                .attr("width", "100px")
+                .attr("height", "25px")
+                .attr("x", function () {
+                    return Math.random() * (width - 50);
+                })
+                .attr("y", function () {
+                    return Math.random() * (height - 50);
+                })
+                .attr("text-overflow", "inherit")
+                .attr("overflow","hidden")
+                .text(function (x) {
+                    console.log(x.questionTitle);
+                    return x["questionTitle"];
+                });
+
+            var force = d3.forceSimulation()
+                .force("link", d3.forceLink())
+                .force("charge", d3.forceManyBody())
+                .force("center", d3.forceCenter(width/2, height/2));
+
+            force.nodes(recommend)
+                .on("tick", ticked);
+        });
+    });
+
+//    node.on("click", function (d) {
+//        $('#numOfNodes li').on('click', function(){
+//            count = $(this).text();
+//        });
+//        console.log(count);
+//        $.get("/recommendation/question/"+ d.name +"/" + count).done(function (rec){
+//            if (error) throw error;
+//
+//            node.attr("visibility","hidden");
+//            link.attr("visibility","hidden");
+//            var pack = d3.pack()
+//                .size([400, 400])
+//                .padding(10);
+//
+//            var root = d3.hierarchy(rec)
+//                .sum(function(d) { return +d["answerCount"]; })
+//                .sort(function(a,b) {return d3.ascending(a.value,b.value)});
+//
+//            var descendants = pack(root);
+//
+//
+//            var snail = d3.select("#innerGraph");
+//
+//            var descendant = snail.selectAll(".snail")
+//                .data(descendants.children)
+//                .enter().append("g")
+//                .attr("class", "snail")
+//                .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+//                .on("mouseover", showhide)
+//                .on("mouseout", showhide);
+//
+//            descendant.append("circle")
+//                .attr("r",function(d) { return d.r; })
+//                .attr("class", function(d) {return d.data["tags"]});
+//
+//            descendant.append("text")
+//                .text(function(d) { return d.data["questionTitle"];});
+//        });
+//    });
 
     node.append("text")
         .attr("dx", 20)

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,12 @@ public class SearchController {
     public String searchMostRelevantQuestion(@PathVariable("term") String term, @PathVariable("page_id")int page) throws Exception{
         QuestionResult result = repository.searchQuestionsBySearchTerm(term, page);
         Gson gson = new GsonBuilder().create();
+        try (Writer writer = new FileWriter("search.json")) {
+            Gson gson_out = new GsonBuilder().create();
+            gson_out.toJson(result, writer);
+            System.out.println("Successfully Copied search result to File...");
+            System.out.println("\nJSON Object: " + result);
+        }
         return gson.toJson(result);
     }
 
@@ -37,7 +44,8 @@ public class SearchController {
         List<Question> result = repository.recommendQuestionsByTag(tag, count);
         Gson gson = new GsonBuilder().create();
         try (FileWriter file = new FileWriter("recommendation.json")) {
-            file.write(result.toString());
+            Gson gson_out = new GsonBuilder().create();
+            gson_out.toJson(result, file);
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + result);
         }
